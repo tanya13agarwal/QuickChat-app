@@ -7,9 +7,8 @@ const Chat = lazy( ()=> import("./pages/Chat") );
 const Groups = lazy( ()=> import("./pages/Groups") );
 const Login = lazy( ()=> import("./pages/Login") );
 
-function App() {
+export default function App() {
   return (
-    <div className="">
 
       <BrowserRouter>
 
@@ -23,8 +22,7 @@ function App() {
         </Routes>
 
       </BrowserRouter>
-    </div>
+
   );
 }
 
-export default App;
