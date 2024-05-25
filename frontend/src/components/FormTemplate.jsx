@@ -1,15 +1,13 @@
 import React, { useState } from 'react'
 import { useForm } from "react-hook-form"
 
-const FormTemplate = ({formName, formButton, optionButton}) => {
+const FormTemplate = ({formName, formButton, optionButton, isLogin, setIsLogin}) => {
 
-    const [isLogin, setIsLogin] = useState(true);
-
-    // useEffect(() => {
-    //     console.log(isLogin);
-    //   }, [isLogin]);
+    // const [isLogin, setIsLogin] = useState(true);
 
     // const toggleLogin = () => setIsLogin((prev) => !prev);
+    
+    console.log(isLogin);
 
     // fetch this data from useForm hook
     const {
@@ -19,7 +17,7 @@ const FormTemplate = ({formName, formButton, optionButton}) => {
         formState: { errors },
       } = useForm();
 
-  return (
+  return ( 
     
     <div>
 
@@ -72,7 +70,7 @@ const FormTemplate = ({formName, formButton, optionButton}) => {
         {/* Login */}
         <button
             // disabled={loading}
-            type="submit"
+            // type="submit"
             className={`rounded-md bg-yellow-50 px-6 py-3 text-center text-[13px] font-bold text-black shadow-[2px_2px_0px_0px_rgba(255,255,255,0.18)] 
             `}
         >
@@ -84,9 +82,8 @@ const FormTemplate = ({formName, formButton, optionButton}) => {
         {/* Register */}
         <button
             // disabled={loading}
-            type="text"
             // if clicked on Sign in, means the user is not logged in 
-            onClick={(prev) => setIsLogin(!prev)}
+            onClick={() => setIsLogin((prev) => (!prev))}
             className={`rounded-md bg-yellow-50 px-6 py-3 text-center text-[13px] font-bold text-black shadow-[2px_2px_0px_0px_rgba(255,255,255,0.18)]`}
         >
             {optionButton}
