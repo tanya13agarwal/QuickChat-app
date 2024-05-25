@@ -1,230 +1,100 @@
-// import React, { useEffect, useState } from 'react'
-// import { useForm } from "react-hook-form"
-import FormTemplate from '../components/FormTemplate';
+import { useState } from "react"
+import { useForm } from "react-hook-form"
+import { Link } from "react-router-dom"
 
 const Login = () => {
 
-    // useState to check if the user is logged in or not
-    const [isLogin, setIsLogin] = useState(true);
+    const [loading, setLoading] = useState(false);
+    // fetch this data from useForm hook
+    const {
+        register,
+        handleSubmit,
+        formState: { errors },
+      } = useForm()
 
-    // // useEffect(() => {
-    // //     console.log(isLogin);
-    // //   }, [isLogin]);
-
-    const toggleLogin = () => setIsLogin((prev) => (!prev));
-
-    // // fetch this data from useForm hook
-    // const {
-    //     register,
-    //     // handleSubmit,
-    //     // reset,
-    //     formState: { errors },
-    //   } = useForm()
+    const handleLogin = () => {
+        alert("form submitted");
+    }
 
     return (
-        <div className='w-11/12 mx-auto flex flex-col items-center justify-center'>
-            {
-                // if isLogin is true then show Login Page else show Sign Up Page
-                isLogin ? (
-                    // <div>
 
-                    //     <p>Login</p>
+        <div className='bg-gradient-to-r from-loginSignUpBgFrom to-loginSignUpBgTo'>
+            {loading ? (
+                <div className="spinner"></div>
+            ) 
+            : (
+                <div className="w-11/12 mx-auto flex flex-col items-center justify-center h-screen ">
+                    <div className="w-[25%] h-[50%] flex flex-col items-center justify-center gap-5 bg-white shadow-2xl">
+                        <p className="text-xl font-semibold">
+                            Login
+                        </p>
+                            
+                        <form onSubmit={handleSubmit(handleLogin)}
+                            className="w-full flex flex-col items-center justify-center gap-3"
+                        >
+
+                            {/* Username field */}
+                            <div className="flex flex-col w-[80%]">
+                                <input
+                                type="text"
+                                name="username"
+                                id="username"
+                                placeholder="Username *"
+                                className="form-style focus:outline-none"
+                                {...register("username", { required: true })}
+                                />
+                                {errors.username && (
+                                <span className="-mt-1 text-[12px] text-red">
+                                    *Please enter your correct username
+                                </span>
+                                )}
+                            </div>
+
+                            {/* Password Field */}
+                            <div className="flex flex-col w-[80%]">
+                                <input
+                                    type="password"
+                                    name="password"
+                                    id="password"
+                                    placeholder="Password *"
+                                    className="form-style focus:outline-none"
+                                    {...register("password", { required: true })}
+                                />
+                                {errors.password && (
+                                <span className="-mt-1 text-[12px] text-red">
+                                    *Please enter your correct password
+                                </span>
+                                )}
+                            </div>
                         
-                    //     <form>
+                            {/* Submit button for Login Or Signup */}
 
-                    //         {/* Username field */}
-                    //         <div className="flex">
-                    //             <label htmlFor="username" className="lable-style">
-                    //                 Username
-                    //             </label>
-                    //             <input
-                    //             type="text"
-                    //             name="username"
-                    //             id="username"
-                    //             placeholder="Enter your username"
-                    //             className="form-style"
-                    //             {...register("username", { required: true })}
-                    //             />
-                    //             {errors.username && (
-                    //             <span className="-mt-1 text-[12px] text-yellow-100">
-                    //                 Please enter your correct username.
-                    //             </span>
-                    //             )}
-                    //         </div>
+                            {/* Login */}
+                            <button
+                                type="submit"
+                                className="w-[80%] bg-Btnblue p-2 text-white rounded-sm  mt-2 mb-2 hover:scale-95 transition-all
+                                duration-200"
+                            >
+                                Login
+                            </button>
 
-                    //         {/* Password Field */}
-                    //         <div className="flex">
-                    //             <label htmlFor="password" className="lable-style">
-                    //                 Password
-                    //             </label>
-                    //             <input
-                    //             type="password"
-                    //             name="password"
-                    //             id="password"
-                    //             placeholder="Enter your Password"
-                    //             className="form-style"
-                    //             {...register("password", { required: true })}
-                    //             />
-                    //             {errors.password && (
-                    //             <span className="-mt-1 text-[12px] text-yellow-100">
-                    //                 Please enter your correct password.
-                    //             </span>
-                    //             )}
-                    //         </div>
-                    
-                    //         {/* Submit button for Login Or Signup */}
+                            <p>Or</p>
 
-                    //         {/* Login */}
-                    //         <button
-                    //             // disabled={loading}
-                    //             type="submit"
-                    //             className={`rounded-md bg-yellow-50 px-6 py-3 text-center text-[13px] font-bold text-black shadow-[2px_2px_0px_0px_rgba(255,255,255,0.18)] 
-                    //             `}
-                    //         >
-                    //             Login
-                    //         </button>
+                            {/* Register */}
+                            <Link to="/signup">
+                                <button
+                                    className="text-Btnblue hover:underline transition-all duration-200"
+                                >
+                                    Sign Up Instead
+                                </button>
+                            </Link>
 
-                    //         <p>Or</p>
-
-                    //         {/* Register */}
-                    //         <button
-                    //             // disabled={loading}
-                    //             type="text"
-                    //             // if clicked on Sign in, means the user is not logged in 
-                    //             onClick={() => setIsLogin((prev) => (!prev))}
-                    //             className={`rounded-md bg-yellow-50 px-6 py-3 text-center text-[13px] font-bold text-black shadow-[2px_2px_0px_0px_rgba(255,255,255,0.18)]`}
-                    //         >
-                    //             Sign Up Instead
-                    //         </button>
-
-                    //     </form>
-                    // </div>
-
-                    <FormTemplate formName="Login" formButton="Login" optionButton="signup instead"/>
-                )
-                : (
-                    // <div>
-
-                    //     <p>Sign Up</p>
-                        
-                    //     <form>
-
-                    //         {/* Full Name field */}
-                    //         <div className="flex">
-                    //             <label htmlFor="fullname" className="lable-style">
-                    //                 FullName
-                    //             </label>
-                    //             <input
-                    //             type="text"
-                    //             name="fullname"
-                    //             id="fullname"
-                    //             placeholder="Enter your fullname"
-                    //             className="form-style"
-                    //             {...register("fullname", { required: true })}
-                    //             />
-                    //             {errors.fullname && (
-                    //             <span className="-mt-1 text-[12px] text-yellow-100">
-                    //                 Please enter your correct fullname.
-                    //             </span>
-                    //             )}
-                    //         </div>
-
-                    //         {/* Bio field */}
-                    //         <div className="flex flex-col gap-2">
-                    //             <label htmlFor="bio" className="lable-style">
-                    //                 Bio
-                    //             </label>
-                    //             <textarea
-                    //             name="bio"
-                    //             id="bio"
-                    //             cols="30"
-                    //             rows="7"
-                    //             placeholder="Enter your bio here"
-                    //             className="form-style"
-                    //             {...register("bio", { required: true })}
-                    //             />
-                    //             {errors.bio && (
-                    //             <span className="-mt-1 text-[12px] text-yellow-100">
-                    //                 Please enter your bio.
-                    //             </span>
-                    //             )}
-                    //         </div>
-
-
-                    //         {/* Username field */}
-                    //         <div className="flex">
-                    //             <label htmlFor="username" className="lable-style">
-                    //                 Username
-                    //             </label>
-                    //             <input
-                    //             type="text"
-                    //             name="username"
-                    //             id="username"
-                    //             placeholder="Enter your username"
-                    //             className="form-style"
-                    //             {...register("username", { required: true })}
-                    //             />
-                    //             {errors.username && (
-                    //             <span className="-mt-1 text-[12px] text-yellow-100">
-                    //                 Please enter your correct username.
-                    //             </span>
-                    //             )}
-                    //         </div>
-
-                    //         {/* Password Field */}
-                    //         <div className="flex">
-                    //             <label htmlFor="password" className="lable-style">
-                    //                 Password
-                    //             </label>
-                    //             <input
-                    //             type="password"
-                    //             name="password"
-                    //             id="password"
-                    //             placeholder="Enter your Password"
-                    //             className="form-style"
-                    //             {...register("password", { required: true })}
-                    //             />
-                    //             {errors.password && (
-                    //             <span className="-mt-1 text-[12px] text-yellow-100">
-                    //                 Please enter your correct password.
-                    //             </span>
-                    //             )}
-                    //         </div>
-                    
-                    //         {/* Submit button for Login Or Signup */}
-
-                    //         {/* Login */}
-                    //         <button
-                    //             // disabled={loading}
-                    //             type="submit"
-                    //             className={`rounded-md bg-yellow-50 px-6 py-3 text-center text-[13px] font-bold text-black shadow-[2px_2px_0px_0px_rgba(255,255,255,0.18)] 
-                    //             `}
-                    //         >
-                    //             SignUp
-                    //         </button>
-
-                    //         <p>OR</p>
-
-                    //         {/* Register */}
-                    //         <button
-                    //             // disabled={loading}
-                    //             type="text"
-                    //             // if clicked on log in, means the user is logged in the system
-                    //             onClick={() => setIsLogin((prev) => (!prev))}
-                    //             className={`rounded-md bg-yellow-50 px-6 py-3 text-center text-[13px] font-bold text-black shadow-[2px_2px_0px_0px_rgba(255,255,255,0.18)]`}
-                    //         >
-                    //             Login Instead
-                    //         </button>
-
-                    //     </form>
-                    // </div>
-
-                    
-                    <FormTemplate formName="SignUp" formButton="SignUp" optionButton="Login instead"/>
-                    
+                            </form>
+                        </div>
+                    </div>
                 )
             }
-            
+        
         </div>
 
     )

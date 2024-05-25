@@ -6,7 +6,12 @@ module.exports = {
   theme: {
     extend: {},
     colors: {
-      red: 'rgb(255,0,0)',
+      white: "#FFFFFF",
+      black: "#000000",
+      red: "#FF0000",
+      Btnblue: "#186abb",
+      loginSignUpBgFrom: "#40A578",
+      loginSignUpBgTo: "#BFF6C3",
     }
   },
   plugins: [],
