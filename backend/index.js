@@ -2,25 +2,39 @@
 
 // create instance of express
 const express = require('express');
-
-// import all routes
-// import userRoute from "./routes/user.js";
-
-
 const app = express();
 
+// import all routes
+const userRoute = require("./routes/user.js");
+
+const database = require("./config/database");
+const dotenv = require("dotenv");
+
+
 // load config from env file
-require("dotenv").config();
+dotenv.config();
 const PORT = process.env.PORT || 4000;
+
+// database connect
+database.connect();
+
 
 // middleware to parse json request body
 app.use(express.json());
 
-// app.use("/user",userRoute);
+app.use("/user",userRoute);
 
-// start the server
-app.listen( PORT, ()=>{ console.log(`Server started successfully at ${PORT}`); } )
+//default route
 
-//connect to database
-const dbConnect = require("./config/database");
-dbConnect.connect();
+app.get("/", (req, res) => {
+	return res.json({
+		success:true,
+		message:'Your server is up and running....'
+	});
+});
+
+app.listen(PORT, () => {
+	console.log(`App is running at ${PORT}`)
+})
+
+
