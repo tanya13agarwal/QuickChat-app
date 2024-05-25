@@ -16,125 +16,114 @@ export default function Signup() {
     }
 
   return (
-    <div className='w-11/12 mx-auto flex flex-col items-center justify-center'>
+    <div className='bg-gradient-to-r from-loginSignUpBgFrom to-loginSignUpBgTo'>
         {loading ? (
-            <div className="spinner"></div>
-                ) : (
-                        <div>
-                            <p>Sign Up</p>
-                                
-                            <form onSubmit={handleSubmit(handleSignup)}>
+                <div className="spinner"></div>
+            ) : (
+                    <div className='w-11/12 mx-auto flex flex-col items-center justify-center h-screen'>
+                        <div className="w-[25%] pt-10 pb-10 flex flex-col items-center justify-center gap-5 bg-white shadow-2xl">
+                            <p className="text-xl font-semibold">
+                                Sign Up
+                            </p>
+                                    
+                            <form onSubmit={handleSubmit(handleSignup)}
+                                className="w-full flex flex-col items-center justify-center gap-5"
+                            >
 
-                                    {/* Full Name field */}
-                                    <div className="flex flex-col">
-                                        <label htmlFor="fullname" className="lable-style">
-                                            FullName
-                                        </label>
-                                        <input
+                                {/* Full Name field */}
+                                <div className="flex flex-col w-[80%]">
+                                    <input
                                         type="text"
                                         name="fullname"
                                         id="fullname"
-                                        placeholder="Enter your fullname"
-                                        className="form-style"
+                                        placeholder="Name *"
+                                        className="form-style focus:outline-none"
                                         {...register("fullname", { required: true })}
-                                        />
-                                        {errors.fullname && (
-                                        <span className="-mt-1 text-[12px] text-yellow-100">
+                                    />
+                                    {errors.fullname && (
+                                        <span className="-mt-1 text-[12px] text-red">
                                             •Please enter your correct fullname
                                         </span>
-                                        )}
-                                    </div>
+                                    )}
+                                </div>
 
-                                    {/* Bio field */}
-                                    <div className="flex flex-col gap-2">
-                                        <label htmlFor="bio" className="lable-style">
-                                            Bio
-                                        </label>
-                                        <textarea
+                                {/* Bio field */}
+                                <div className="flex flex-col w-[80%]">
+                                    <textarea
                                         name="bio"
                                         id="bio"
-                                        cols="30"
-                                        rows="7"
-                                        placeholder="Enter your bio here"
-                                        className="form-style"
-                                        {...register("bio", { required: true })}
-                                        />
-                                        {errors.bio && (
-                                        <span className="-mt-1 text-[12px] text-yellow-100">
-                                            Please enter your bio.
+                                        rows="1"
+                                        placeholder="Bio"
+                                        className="form-style focus:outline-none"
+                                        {...register("bio")}
+                                    />
+                                    {errors.bio && (
+                                        <span className="-mt-1 text-[12px] text-red">
+                                            *Please enter your bio
                                         </span>
-                                        )}
-                                    </div>
+                                    )}
+                                </div>
 
 
-                                    {/* Username field */}
-                                    <div className="flex flex-col">
-                                        <label htmlFor="username" className="lable-style">
-                                            Username
-                                        </label>
-                                        <input
+                                {/* Username field */}
+                                <div className="flex flex-col w-[80%]">
+                                    <input
                                         type="text"
                                         name="username"
                                         id="username"
-                                        placeholder="Enter your username"
-                                        className="form-style"
+                                        placeholder="Username *"
+                                        className="form-style focus:outline-none"
                                         {...register("username", { required: true })}
-                                        />
-                                        {errors.username && (
-                                        <span className="-mt-1 text-[12px] text-yellow-100">
-                                            Please enter your correct username.
+                                    />
+                                    {errors.username && (
+                                        <span className="-mt-1 text-[12px] text-red">
+                                            *Please enter your correct username
                                         </span>
-                                        )}
-                                    </div>
+                                    )}
+                                </div>
 
-                                    {/* Password Field */}
-                                    <div className="flex flex-col">
-                                        <label htmlFor="password" className="lable-style">
-                                            Password
-                                        </label>
-                                        <input
+                                {/* Password Field */}
+                                <div className="flex flex-col w-[80%]">
+                                    <input
                                         type="password"
                                         name="password"
                                         id="password"
-                                        placeholder="Enter your Password"
-                                        className="form-style"
+                                        placeholder="Password *"
+                                        className="form-style focus:outline-none"
                                         {...register("password", { required: true })}
-                                        />
-                                        {errors.password && (
-                                        <span className="-mt-1 text-[12px] text-yellow-100">
-                                            Please enter your correct password.
+                                    />
+                                    {errors.password && (
+                                        <span className="-mt-1 text-[12px] text-red">
+                                            *Please enter your correct password
                                         </span>
-                                        )}
-                                    </div>
-                            
-                                    {/* Submit button for Login Or Signup */}
+                                    )}
+                                </div>
+                                
+                                {/* Submit button for Login Or Signup */}
 
-                                    {/* Login */}
+                                {/* Login */}
+                                <button
+                                    type="submit"
+                                    className="w-[80%] bg-Btnblue p-2 text-white rounded-sm  mt-2 mb-2 hover:scale-95 transition-all
+                                        duration-200"
+                                >
+                                    SignUp
+                                </button>
+
+                                <p>OR</p>
+
+                                {/* Register */}
+                                <Link to="/login">
                                     <button
-                                        // disabled={loading}
-                                        type="submit"
-                                        className={`rounded-md bg-yellow-50 px-6 py-3 text-center text-[13px] font-bold text-black shadow-[2px_2px_0px_0px_rgba(255,255,255,0.18)] 
-                                        `}
+                                        className="text-Btnblue hover:underline transition-all duration-200"
                                     >
-                                        SignUp
+                                        Login Instead
                                     </button>
-
-                                    <p>OR</p>
-
-                                    {/* Register */}
-                                    <Link to="/login">
-                                        <button
-                                            // disabled={loading}
-                                            // if clicked on log in, means the user is logged in the system
-                                            // onClick={() => setIsLogin((prev) => (!prev))}
-                                            className={`rounded-md bg-yellow-50 px-6 py-3 text-center text-[13px] font-bold text-black shadow-[2px_2px_0px_0px_rgba(255,255,255,0.18)]`}
-                                        >
-                                            Login Instead
-                                        </button>
-                                    </Link>
+                                </Link>
 
                             </form>
                         </div>
+                    </div>
                 )
         }
 

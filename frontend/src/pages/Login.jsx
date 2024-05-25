@@ -24,7 +24,7 @@ const Login = () => {
             ) 
             : (
                 <div className="w-11/12 mx-auto flex flex-col items-center justify-center h-screen ">
-                    <div className="w-[25%] h-[50%] flex flex-col items-center justify-center gap-5 bg-white shadow-2xl">
+                    <div className="w-[25%] pt-10 pb-10 flex flex-col items-center justify-center gap-5 bg-white shadow-2xl">
                         <p className="text-xl font-semibold">
                             Login
                         </p>
