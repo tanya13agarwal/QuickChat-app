@@ -3,12 +3,14 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import ProtectRoute from "./components/auth/ProtectRoute";
+import Home from "./pages/Home";
+import Chat from "./pages/Chat";
 // import NotFound from "./pages/NotFound";
 
 
 // Dynamic Routing
-const Home = lazy( () => import("./pages/Home") );
-const Chat = lazy( () => import("./pages/Chat") );
+// const Home = lazy( () => import("./pages/Home") );
+// const Chat = lazy( () => import("./pages/Chat") );
 const Groups = lazy( () => import("./pages/Groups") );
 const NotFound = lazy( () => import("./pages/NotFound") );
 

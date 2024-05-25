@@ -13,6 +13,7 @@ module.exports = {
       Btnblue: "#186abb",
       baseColor: "#40A578",
       baseColor2: "#BFF6C3",
+      linkHover: "rgba(0, 0, 0, 0.1)",
     }
   },
   plugins: [],
