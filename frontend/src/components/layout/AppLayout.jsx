@@ -5,10 +5,10 @@ const AppLayout = () => {
   return (
     <>
         <Header/>
-        <div className="grid grid-cols-12 gap-4">
-            <div>first</div>
-            <div className="bg-red">second</div>
-            <div>third</div>
+        <div className="grid lg:grid-cols-4 md:grid-cols-3  gap-4">
+            <div className = "hidden md:block">first</div> 
+            <div className="bg-red col-span-2">second</div>
+            <div className = "hidden lg:block">third</div>
         </div>
     </>
   )

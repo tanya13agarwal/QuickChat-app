@@ -18,7 +18,7 @@ const Login = () => {
 
     return (
 
-        <div className='bg-gradient-to-r from-loginSignUpBgFrom to-loginSignUpBgTo'>
+        <div className='bg-gradient-to-r from-baseColor to-baseColor2'>
             {loading ? (
                 <div className="spinner"></div>
             ) 

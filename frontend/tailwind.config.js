@@ -8,10 +8,11 @@ module.exports = {
     colors: {
       white: "#FFFFFF",
       black: "#000000",
+      gray: "rgba(247,247,247,.2)",
       red: "#FF0000",
       Btnblue: "#186abb",
-      loginSignUpBgFrom: "#40A578",
-      loginSignUpBgTo: "#BFF6C3",
+      baseColor: "#40A578",
+      baseColor2: "#BFF6C3",
     }
   },
   plugins: [],

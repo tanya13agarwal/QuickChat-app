@@ -123,7 +123,10 @@ code {
 }
 
 .form-style {
-  border: 1px solid black;
-  padding: 8px;
+  border: 1px solid rgb(172, 172, 172);
+  padding: 15px;
   border-radius: 3px;
+}
+.form-style:hover {
+  border-color: black;
 }
