@@ -1,40 +1,48 @@
-import React from 'react'
+import React, { useState } from 'react'
 import Header from '../Header'
 import ChatList from './ChatList';
 import { sampleChats } from '../../../data/sampleData';
 import { useParams } from 'react-router-dom';
+import Profile from './Profile';
 
-const AppLayout = () => {
+const AppLayout = () => ( WrappedComponent ) => {
+  
+  return (props) => {
+    
+    const params = useParams();
+    const chatId = params.chatId;
+    
 
-  const {chatId} = useParams();
-  // const chatId = params.chatId; 
+    const handleDeleteChat = (e, chatId, groupChat) => {
+      // dispatch(setIsDeleteMenu(true));
+      // dispatch(setSelectedDeleteChat({ chatId, groupChat }));
+      // deleteMenuAnchor.current = e.currentTarget;
+    };
+    return (
+      <>
+          <Header/> 
+          <div className="grid lg:grid-cols-4 md:grid-cols-3 h-[calc(100vh-4rem)]">
 
-  console.log(chatId);
+              <div className = "hidden md:block h-[100%]">
+                <ChatList
+                  chats={sampleChats}
+                  chatId={chatId}
+                  handleDeleteChat={handleDeleteChat}
+                />
+              </div> 
 
-  // const handleDeleteChat = (e, chatId, groupChat) => {
-  //   // dispatch(setIsDeleteMenu(true));
-  //   // dispatch(setSelectedDeleteChat({ chatId, groupChat }));
-  //   // deleteMenuAnchor.current = e.currentTarget;
-  // };
-  return (
-    <>
-        <Header/> 
-        <div className="grid lg:grid-cols-4 md:grid-cols-3  gap-4">
+              <div className="col-span-2  h-[100%]">
+                <WrappedComponent {...props}/>
+              </div>
+              <div className = "hidden lg:block h-[100%] bg-black">
+                <Profile/>
+              </div>
 
-            <div className = "hidden md:block">
-              <ChatList
-                chats={sampleChats}
-                chatId={chatId}
-                newMessagesAlert={[{chatId, count: 4},]}
-                onlineUsers={["1","2"]}
-              />
-            </div> 
-
-            <div className="bg-red col-span-2">second</div>
-            <div className = "hidden lg:block">third</div>
-
-        </div>
-    </>
-  )
+          </div>
+      </>
+    )
+  }
 }
 export default AppLayout 
+
+

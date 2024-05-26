@@ -13,7 +13,7 @@ const ChatList = ({
   handleDeleteChat,
 }) => {
   return (
-    <div>
+    <div className="w-[100%] flex flex-col">
         {
             chats.map((data , index) => {
                 const {avatar, _id, name, groupChat, members} = data;

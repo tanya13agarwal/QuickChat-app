@@ -8,7 +8,9 @@ export const sampleChats = [
     },
   
     {
-      avatar: ["https://www.w3schools.com/howto/img_avatar.png"],
+      avatar: ["https://www.w3schools.com/howto/img_avatar.png",
+      "https://www.w3schools.com/howto/img_avatar.png","https://www.w3schools.com/howto/img_avatar.png"
+      ],
       name: "John Boi",
       _id: "2",
       groupChat: true,
@@ -69,7 +71,7 @@ export const sampleChats = [
       content: "",
       _id: "sfnsdjkfsdnfkdddjsbnd",
       sender: {
-        _id: "sdfsdfsdf",
+        _id: "123344",
         name: "Chaman  2",
       },
       chat: "chatId",

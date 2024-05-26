@@ -9,6 +9,7 @@ import { MdOutlineLogout } from "react-icons/md";
 import SearchModal from '../modal/SearchModal';
 import NewGroupModal from '../modal/NewGroupModal';
 import NotificationModal from '../modal/NotificationModal';
+import { useNavigate } from 'react-router-dom';
 
 const Header = () => {
 
@@ -17,6 +18,7 @@ const Header = () => {
     const [isNewGroup , setIsNewGroup] = useState(false);
     const [isNotification , setIsNotification] = useState(false);
 
+    const navigate = useNavigate();
 
     const handleMobile = () => {
         setIsMobile((prev) => (!prev))
@@ -27,11 +29,10 @@ const Header = () => {
     }
 
     const NewGroupHandler = () => {
-        setIsNewGroup((prev) => (!prev))
+        setIsNewGroup((prev) => !prev)
     }
 
-    const ManageGroupHandler = () => {
-    }
+    const ManageGroupHandler = () => navigate("/groups");
 
     const NotificationHandler = () => {
         setIsNotification((prev) => (!prev))
@@ -69,7 +70,7 @@ const Header = () => {
 
             <button
                 className="hover:bg-gray hover:rounded-full p-2"
-                onClick={ManageGroupHandler}
+                onClick={(ManageGroupHandler)}
             >
                 <MdGroup/>
             </button>

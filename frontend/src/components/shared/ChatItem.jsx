@@ -23,12 +23,9 @@ const ChatItem = ({
       >
         <div
             className= {`relative p-[1rem] flex gap-[1rem] items-center ${sameSender ? "bg-black text-white" : ""}
-                transition-all duration-200`}
-        //   initial={{ opacity: 0, y: "-100%" }}
-        //   whileInView={{ opacity: 1, y: 0 }}
-        //   transition={{ delay: 0.1 * index }}
+            transition-all duration-200`}
         >
-          {/* <AvatarCard avatar={avatar} /> */}
+          <AvatarCard avatar={avatar} />
    
           <div>
             <p>{name}</p>

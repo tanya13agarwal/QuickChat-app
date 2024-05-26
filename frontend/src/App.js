@@ -19,7 +19,6 @@ let user = true;
 export default function App() {
   return (
 
-      <BrowserRouter>
  
         <Routes>
 
@@ -45,8 +44,6 @@ export default function App() {
           <Route path="*" element={<NotFound/>}/>
 
         </Routes> 
-
-      </BrowserRouter>
 
   );
 }
