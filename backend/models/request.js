@@ -1,6 +1,6 @@
-const mongoose = require("mongoose");
+import mongoose, { Schema, model, Types } from "mongoose";
 
-const requestSchema = new mongoose.Schema(
+const schema = new Schema(
   {
     status: {
       type: String,
@@ -9,12 +9,12 @@ const requestSchema = new mongoose.Schema(
     },
 
     sender: {
-      type: mongoose.Schema.Types.ObjectId,
+      type: Types.ObjectId,
       ref: "User",
       required: true,
     },
     receiver: {
-      type: mongoose.Schema.Types.ObjectId,
+      type: Types.ObjectId,
       ref: "User",
       required: true,
     },
@@ -24,4 +24,4 @@ const requestSchema = new mongoose.Schema(
   }
 );
 
-module.exports = mongoose.model("Request", requestSchema);
+export const Request = mongoose.models.Request || model("Request", schema);

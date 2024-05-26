@@ -1,6 +1,6 @@
-const mongoose = require("mongoose");
+import mongoose, { Schema, model, Types } from "mongoose";
 
-const messageSchema = new mongoose.Schema(
+const schema = new Schema(
   {
     content: String,
 
@@ -13,17 +13,17 @@ const messageSchema = new mongoose.Schema(
         url: {
           type: String,
           required: true,
-        }
-      }
+        },
+      },
     ],
 
     sender: {
-      type: mongoose.Schema.Types.ObjectId,
+      type: Types.ObjectId,
       ref: "User",
       required: true,
     },
     chat: {
-      type: mongoose.Schema.Types.ObjectId,
+      type: Types.ObjectId,
       ref: "Chat",
       required: true,
     },
@@ -33,4 +33,4 @@ const messageSchema = new mongoose.Schema(
   }
 );
 
-module.exports = mongoose.model("Message", messageSchema);
+export const Message = mongoose.models.Message || model("Message", schema);
