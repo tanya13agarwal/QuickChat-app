@@ -8,6 +8,8 @@ module.exports = {
     colors: {
       white: "#FFFFFF",
       black: "#000000",
+      matBlack: "#1c1c1c",
+      bisque: "#FFE4C4",
       gray: "rgba(247,247,247,.2)",
       grayColor: "rgba(247,247,247,1)",
       red: "#FF0000",
