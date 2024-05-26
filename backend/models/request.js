@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const requestSchema = new Schema(
+const requestSchema = new mongoose.Schema(
   {
     status: {
       type: String,
@@ -9,12 +9,12 @@ const requestSchema = new Schema(
     },
 
     sender: {
-      type: Types.ObjectId,
+      type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       required: true,
     },
     receiver: {
-      type: Types.ObjectId,
+      type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       required: true,
     },

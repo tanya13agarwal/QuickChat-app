@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const chatSchema = new Schema(
+const chatSchema = new mongoose.Schema(
   {
     fullname: {
       type: String,
@@ -13,13 +13,13 @@ const chatSchema = new Schema(
     },
 
     creator: {
-      type: Types.ObjectId,
+      type: mongoose.Schema.Types.ObjectId,
       ref: "User",
     },
 
     members: [
       {
-        type: Types.ObjectId,
+        type: mongoose.Schema.Types.ObjectId,
         ref: "User",
       }
     ],

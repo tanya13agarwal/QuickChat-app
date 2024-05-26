@@ -5,7 +5,7 @@ const cookieOptions = {
     sameSite: "none",
     httpOnly: true,
     secure: true,
-  };
+};
 
 const sendToken = (res, user, code, message) => {
     const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET);
@@ -18,4 +18,4 @@ const sendToken = (res, user, code, message) => {
 };
 
 module.exports = sendToken;
-
+// module.exports = cookieOptions;
