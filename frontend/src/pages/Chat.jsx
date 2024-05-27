@@ -75,7 +75,7 @@ const Chat = (chatId, user) => {
   const members = chatDetails?.data?.chat?.members;
 
   const messageOnChange = (e) => {
-    setMessage(e.target.value);
+    setMessage(e.target.value); 
 
     if (!IamTyping) {
       socket.emit(START_TYPING, { members, chatId });
@@ -207,7 +207,7 @@ const Chat = (chatId, user) => {
               </button>
   
               <input
-                placeholder='Type message here...' value={message} onChange={(e) => setMessage(e.target.value)}
+                placeholder='Type message here...' value={message} onChange={messageOnChange}
                 className='w-[100%] h-[100%] border-none outline-none p-0 pl-[3rem] pr-[3rem] bg-grayColor '
               />
   

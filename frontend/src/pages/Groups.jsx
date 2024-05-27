@@ -11,46 +11,141 @@ import AvatarCard from "../components/shared/AvatarCard";
 import { sampleChats } from "../data/sampleData"
 
 
+import { useAsyncMutation, useErrors } from "../hooks/hook";
+import {
+  useChatDetailsQuery,
+  useDeleteChatMutation,
+  useMyGroupsQuery,
+  useRemoveGroupMemberMutation,
+  useRenameGroupMutation,
+} from "../redux/api/api";
 
+import { setIsAddMember } from "../redux/reducers/misc";
+
+const ConfirmDeleteDialog = lazy(() =>
+  import("../components/dialogs/ConfirmDeleteDialog")
+);
+const AddMemberDialog = lazy(() =>
+  import("../components/dialogs/AddMemberDialog")
+);
 
 const Groups = () => {
-
-  const [isMobile , setIsMobile] = useState(false);
-  const [isEdit , setIsEdit] = useState(false);
-  const [groupName , setGroupName] = useState("")
-  const [groupNameUpdated , setGroupNameUpdated] = useState("")
-
+  const chatId = useSearchParams()[0].get("group");
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
-  const chatId = useSearchParams()[0].get("group")
+  const { isAddMember } = useSelector((state) => state.misc);
 
-  const navigateBack = () => {
-    navigate("/")
-  }
+  const myGroups = useMyGroupsQuery("");
 
-  const handleMobile = () => {
-    setIsMobile((prev) => !prev);
-  }
+  const groupDetails = useChatDetailsQuery(
+    { chatId, populate: true },
+    { skip: !chatId }
+  );
 
-  const handleMobileClose = () => {
-    setIsMobile(false);
-  }
+  const [updateGroup, isLoadingGroupName] = useAsyncMutation(
+    useRenameGroupMutation
+  );
 
-  const updateGroupName = () => {
-    setIsEdit(false)
-    console.log(groupNameUpdated)
-  }
+  const [removeMember, isLoadingRemoveMember] = useAsyncMutation(
+    useRemoveGroupMemberMutation
+  );
+
+  const [deleteGroup, isLoadingDeleteGroup] = useAsyncMutation(
+    useDeleteChatMutation
+  );
+
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isEdit, setIsEdit] = useState(false);
+  const [confirmDeleteDialog, setConfirmDeleteDialog] = useState(false);
+
+  const [groupName, setGroupName] = useState("");
+  const [groupNameUpdatedValue, setGroupNameUpdatedValue] = useState("");
+
+  const [members, setMembers] = useState([]);
+
+  const errors = [
+    {
+      isError: myGroups.isError,
+      error: myGroups.error,
+    },
+    {
+      isError: groupDetails.isError,
+      error: groupDetails.error,
+    },
+  ];
+
+  useErrors(errors);
 
   useEffect(() => {
-    setGroupName(`Group Name ${chatId}`);
-    setGroupNameUpdated(`Group Name ${chatId}`);
+    const groupData = groupDetails.data;
+    if (groupData) {
+      setGroupName(groupData.chat.name);
+      setGroupNameUpdatedValue(groupData.chat.name);
+      setMembers(groupData.chat.members);
+    }
 
     return () => {
-      setGroupName("")
-      setGroupNameUpdated("")
-      setIsEdit("")
+      setGroupName("");
+      setGroupNameUpdatedValue("");
+      setMembers([]);
+      setIsEdit(false);
+    };
+  }, [groupDetails.data]);
+
+  const navigateBack = () => {
+    navigate("/");
+  };
+
+  const handleMobile = () => {
+    setIsMobileMenuOpen((prev) => !prev);
+  };
+
+  const handleMobileClose = () => setIsMobileMenuOpen(false);
+
+  const updateGroupName = () => {
+    setIsEdit(false);
+    updateGroup("Updating Group Name...", {
+      chatId,
+      name: groupNameUpdatedValue,
+    });
+  };
+
+  const openConfirmDeleteHandler = () => {
+    setConfirmDeleteDialog(true);
+  };
+
+  const closeConfirmDeleteHandler = () => {
+    setConfirmDeleteDialog(false);
+  };
+
+  const openAddMemberHandler = () => {
+    dispatch(setIsAddMember(true));
+  };
+
+  const deleteHandler = () => {
+    deleteGroup("Deleting Group...", chatId);
+    closeConfirmDeleteHandler();
+    navigate("/groups");
+  };
+
+  const removeMemberHandler = (userId) => {
+    removeMember("Removing Member...", { chatId, userId });
+  };
+
+  useEffect(() => {
+    if (chatId) {
+      setGroupName(`Group Name ${chatId}`);
+      setGroupNameUpdatedValue(`Group Name ${chatId}`);
     }
-  } , [chatId])
+
+    return () => {
+      setGroupName("");
+      setGroupNameUpdatedValue("");
+      setIsEdit(false);
+    };
+  }, [chatId]);
+
 
   const IconBtns = (
     <>
@@ -84,6 +179,7 @@ const Groups = () => {
             />
             <button 
               onClick={updateGroupName}
+              disabled={isLoadingGroupName}
             >
                 <MdDone className='text-xl'/>
             </button>
@@ -94,6 +190,7 @@ const Groups = () => {
               {groupName}
             </p>
             <button 
+              disabled={isLoadingGroupName}
               onClick={() => setIsEdit(true)}
             >
                 <MdEdit/>
