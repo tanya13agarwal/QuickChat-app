@@ -46,35 +46,35 @@ const AppLayout = () => ( WrappedComponent ) => {
 
     const handleMobileClose = () => dispatch(setIsMobile(false));
 
-    // const newMessageAlertListener = useCallback(
-    //   (data) => {
-    //     if (data.chatId === chatId) return;
-    //     dispatch(setNewMessagesAlert(data));
-    //   },
-    //   [chatId]
-    // );
+    const newMessageAlertListener = useCallback(
+      (data) => {
+        if (data.chatId === chatId) return;
+        dispatch(setNewMessagesAlert(data));
+      },
+      [chatId]
+    );
 
-    // const newRequestListener = useCallback(() => {
-    //   dispatch(incrementNotification());
-    // }, [dispatch]);
+    const newRequestListener = useCallback(() => {
+      dispatch(incrementNotification());
+    }, [dispatch]);
 
-    // const refetchListener = useCallback(() => {
-    //   refetch();
-    //   navigate("/");
-    // }, [refetch, navigate]);
+    const refetchListener = useCallback(() => {
+      refetch();
+      navigate("/");
+    }, [refetch, navigate]);
 
-    // const onlineUsersListener = useCallback((data) => {
-    //   setOnlineUsers(data);
-    // }, []);
+    const onlineUsersListener = useCallback((data) => {
+      setOnlineUsers(data);
+    }, []);
 
-    // const eventHandlers = {
-    //   [NEW_MESSAGE_ALERT]: newMessageAlertListener,
-    //   [NEW_REQUEST]: newRequestListener,
-    //   [REFETCH_CHATS]: refetchListener,
-    //   [ONLINE_USERS]: onlineUsersListener,
-    // };
+    const eventHandlers = {
+      [NEW_MESSAGE_ALERT]: newMessageAlertListener,
+      [NEW_REQUEST]: newRequestListener,
+      [REFETCH_CHATS]: refetchListener,
+      [ONLINE_USERS]: onlineUsersListener,
+    };
 
-    // useSocketEvents(socket, eventHandlers);
+    useSocketEvents(socket, eventHandlers);
 
 
     return (
@@ -102,12 +102,13 @@ const AppLayout = () => ( WrappedComponent ) => {
                         chats={data?.chats}
                         chatId={chatId}
                         handleDeleteChat={handleDeleteChat}
+                        
                     />)
                   }
               </div> 
 
               <div className="col-span-2  h-[100%]">
-                <WrappedComponent {...props}/>
+                <WrappedComponent {...props} chatId={chatId} user = {user}/>
               </div>
               <div className = "hidden lg:block h-[100%] bg-black">
                
