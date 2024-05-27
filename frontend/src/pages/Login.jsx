@@ -2,6 +2,8 @@ import { useState } from "react"
 import { useForm } from "react-hook-form"
 import { Link } from "react-router-dom"
 
+import {toast} from "react-hot-toast"
+
 const Login = () => {
 
     const [loading, setLoading] = useState(false);
@@ -12,9 +14,48 @@ const Login = () => {
         formState: { errors },
       } = useForm()
 
-    const handleLogin = () => {
-        alert("form submitted");
-    }
+    // const handleLogin = () => {
+    //     alert("form submitted");
+    // }
+
+    const handleLogin = async (e) => {
+        e.preventDefault();
+    
+        const toastId = toast.loading("Logging In...");
+    
+        setLoading(true);
+
+        const config = {
+          withCredentials: true,
+          headers: {
+            "Content-Type": "application/json",
+          },
+        };
+    
+        try {
+          const { data } = await axios.post(
+            `${server}/api/v1/user/login`,
+            {
+              username: username.value,
+              password: password.value,
+            },
+            config
+          );
+          dispatch(userExists(data.user));
+          toast.success(data.message, {
+            id: toastId,
+          });
+        }
+        catch (error) {
+          toast.error(error?.response?.data?.message || "Something Went Wrong", {
+            id: toastId,
+          });
+        }
+        finally {
+          setLoading(false);
+        }
+      };
+
 
     return (
 

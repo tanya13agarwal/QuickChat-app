@@ -61,7 +61,8 @@ const uploadFilesToCloudinary = async (files = []) => {
       url: result.secure_url,
     }));
     return formattedResults;
-  } catch (err) {
+  } 
+  catch (err) {
     throw new Error("Error uploading files to cloudinary", err);
   }
 };

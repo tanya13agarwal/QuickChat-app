@@ -7,7 +7,12 @@ import Home from "./pages/Home";
 import Chat from "./pages/Chat";
 // import NotFound from "./pages/NotFound";
 
+import axios from "axios";
+import {useDispatch} from "react-redux"
+import { SocketProvider } from "./utils/socket";
 
+ 
+ 
 // Dynamic Routing
 // const Home = lazy( () => import("./pages/Home") );
 // const Chat = lazy( () => import("./pages/Chat") );
@@ -17,6 +22,18 @@ const NotFound = lazy( () => import("./pages/NotFound") );
 let user = true;
 
 export default function App() {
+
+  const { user } = useSelector((state) => state.auth);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    axios
+      .get(`${server}/api/v1/user/me`, { withCredentials: true })
+      .then(({ data }) => dispatch(userExists(data.user)))
+      .catch((err) => dispatch(userNotExists()));
+  }, [dispatch]);
+  
+
   return (
 
  
@@ -24,7 +41,11 @@ export default function App() {
 
           {/* Outlet :- If the parent route matched exactly, it will render a child index route out of these */}
           {/* if the user is true i.e, logged in, then show any of these routes */}
-          <Route element={<ProtectRoute user={user}/>}>
+          <Route element={
+            <SocketProvider>
+              <ProtectRoute user={user}/>
+            </SocketProvider>
+          }>
             <Route path="/" element={<Home/>}/>
             <Route path="/chat/:chatId" element={<Chat/>}/>
             <Route path="/groups" element={<Groups/>}/>
@@ -34,7 +55,7 @@ export default function App() {
           <Route path="/login" element={
             // even if the user is true, ProtectRoute will get false and redirect to '/' 
             // i.e, if the user is on home page(logged in), he will not redirect to login page
-            <ProtectRoute user={!user} redirect="/">
+            <ProtectRoute user={user} redirect="/">
               <Login/>
             </ProtectRoute>}
           />

@@ -1,10 +1,11 @@
 import React from 'react';
 import { IoMdAdd } from "react-icons/io";
 import { IoMdRemove } from "react-icons/io";
+import { transformImage } from '../../library/features';
 
 
 
-const UserItem = ({user , handler , handlerIsLoading , isAdded = false}) => {
+const  UserItem = ({user , handler , handlerIsLoading , isAdded = false}) => {
 
     const {name , _id , avatar} = user;
 
@@ -12,7 +13,7 @@ const UserItem = ({user , handler , handlerIsLoading , isAdded = false}) => {
     <ul>
         <div className='flex items-center transition-all duration-200 gap-[1rem] w-[100%]'>
             <img
-                src={avatar}
+                src={transformImage(avatar)}
                 alt='Avatar'
                 className='w-[70px] h-[70px]  border-[5px] rounded-full border-white'
             />

@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { useForm } from 'react-hook-form';
 import { Link } from 'react-router-dom';
+import { toast } from 'react-hot-toast';
 
 export default function Signup() {
 
@@ -11,9 +12,47 @@ export default function Signup() {
         formState: { errors },
       } = useForm()
 
-    const handleSignup = () => {
-
-    }
+    const handleSignup = async (e) => {
+        e.preventDefault();
+    
+        const toastId = toast.loading("Signing Up...");
+        setLoading(true);
+    
+        const formData = new FormData();
+        formData.append("avatar", avatar.file);
+        formData.append("name", name.value);
+        formData.append("bio", bio.value);
+        formData.append("username", username.value);
+        formData.append("password", password.value);
+    
+        const config = {
+          withCredentials: true,
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        };
+    
+        try {
+          const { data } = await axios.post(
+            `${server}/api/v1/user/new`,
+            formData,
+            config
+          );
+    
+          dispatch(userExists(data.user));
+          toast.success(data.message, {
+            id: toastId,
+          });
+        }
+        catch (error) {
+          toast.error(error?.response?.data?.message || "Something Went Wrong", {
+            id: toastId,
+          });
+        }
+        finally {
+          setLoading(false);
+        }
+    };
 
   return (
     <div className='bg-gradient-to-r from-baseColor to-baseColor2'>

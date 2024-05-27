@@ -10,35 +10,46 @@ import SearchModal from '../modal/SearchModal';
 import NewGroupModal from '../modal/NewGroupModal';
 import NotificationModal from '../modal/NotificationModal';
 import { useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { setIsMobile, setIsSearch, setIsNewGroup, setIsNotification } from '../../redux/reducers/misc';
+import { resetNotificationCount } from '../../redux/reducers/chat';
 
 const Header = () => {
 
-    const [isSearch , setIsSearch] = useState(false);
-    const [isMobile , setIsMobile] = useState(false);
-    const [isNewGroup , setIsNewGroup] = useState(false);
-    const [isNotification , setIsNotification] = useState(false);
-
     const navigate = useNavigate();
+    const dispatch = useDispatch();
 
-    const handleMobile = () => {
-        setIsMobile((prev) => (!prev))
-    }
+    const { isSearch, isNotification, isNewGroup } = useSelector( (state) => state.misc );
+    const { notificationCount } = useSelector((state) => state.chat);
+    
 
-    const SearchHandler = () => {
-        setIsSearch((prev) => !prev)
-    }
+    const handleMobile = () => dispatch(setIsMobile(true)); 
 
-    const NewGroupHandler = () => {
-        setIsNewGroup((prev) => !prev)
-    }
+    const openSearch = () => dispatch(setIsSearch(true));
 
-    const ManageGroupHandler = () => navigate("/groups");
 
-    const NotificationHandler = () => {
-        setIsNotification((prev) => (!prev))
-    }
+    const openNewGroup = () => {
+        dispatch(setIsNewGroup(true));
+      };
+    
+      const openNotification = () => {
+        dispatch(setIsNotification(true));
+        dispatch(resetNotificationCount());
+      };
+    
+      const navigateToGroup = () => navigate("/groups");
 
-    const LogoutHandler = () => {
+    const LogoutHandler = async () => {
+        try {
+            const { data } = await axios.get(`${server}/api/v1/user/logout`, {
+              withCredentials: true,
+            });
+            dispatch(userNotExists());
+            toast.success(data.message);
+        }
+        catch (error) {
+            toast.error(error?.response?.data?.message || "Something went wrong");
+        } 
     }
 
   return (
@@ -56,28 +67,28 @@ const Header = () => {
         <div className="flex justify-between items-center text-white text-2xl gap-4 m-5">
             <button
                 className="hover:bg-gray hover:rounded-full p-2"
-                onClick={SearchHandler}
+                onClick={openSearch}
             >
                 <IoMdSearch/>
             </button>
 
             <button
                 className="hover:bg-gray hover:rounded-full p-2"
-                onClick={NewGroupHandler}
+                onClick={openNewGroup}
             >
                 <IoMdAdd/>
             </button>
 
             <button
                 className="hover:bg-gray hover:rounded-full p-2"
-                onClick={(ManageGroupHandler)}
+                onClick={(navigateToGroup)}
             >
                 <MdGroup/>
             </button>
 
             <button
                 className="hover:bg-gray hover:rounded-full p-2"
-                onClick={NotificationHandler}
+                onClick={openNotification}
             >
                 <FaBell/>
             </button>
