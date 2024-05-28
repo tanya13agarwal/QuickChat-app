@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useForm } from 'react-hook-form';
 import { Link } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
@@ -9,8 +9,20 @@ export default function Signup() {
     const {
         register,
         handleSubmit,
-        formState: { errors },
-      } = useForm()
+        reset,
+        formState: {errors , isSubmitSuccessful},
+      } = useForm();
+
+    useEffect(() => {
+        if(isSubmitSuccessful) {
+          reset({
+            bio: "",
+            fullname: "",
+            username: "",
+            password: "",
+          })
+        }
+    },[reset , isSubmitSuccessful]);
 
     const handleSignup = async (e) => {
         e.preventDefault();
@@ -20,7 +32,7 @@ export default function Signup() {
     
         const formData = new FormData();
         formData.append("avatar", avatar.file);
-        formData.append("name", name.value);
+        formData.append("name", fullname.value);
         formData.append("bio", bio.value);
         formData.append("username", username.value);
         formData.append("password", password.value);

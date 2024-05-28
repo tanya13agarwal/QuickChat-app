@@ -9,11 +9,20 @@ const Login = () => {
     const [loading, setLoading] = useState(false);
     // fetch this data from useForm hook
     const {
-        register,
-        handleSubmit,
-        formState: { errors },
-      } = useForm()
-
+      register,
+      handleSubmit,
+      reset,
+      formState: {errors , isSubmitSuccessful},
+    } = useForm();
+  
+    useEffect(() => {
+      if(isSubmitSuccessful) {
+        reset({
+          username: "",
+          password: "",
+        })
+      }
+    },[reset , isSubmitSuccessful]);
     // const handleLogin = () => {
     //     alert("form submitted");
     // }

@@ -4,12 +4,18 @@ import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { IoMenu } from "react-icons/io5";
 import { MdEdit } from "react-icons/md";
 import { MdDone } from "react-icons/md";
+import { MdDelete } from "react-icons/md";
+import { IoMdClose } from "react-icons/io";
 
+import { LayoutLoader } from '../components/layout/appLayout/Loaders';
 
 import Drawer from '../components/shared/Drawer';
 import AvatarCard from "../components/shared/AvatarCard";
-import { sampleChats } from "../data/sampleData"
+import { sampleChats, sampleUsers } from "../data/sampleData"
 
+import ConfirmDeleteDialog from '../components/dialogs/ConfirmDeleteDialog';
+import AddMemberDialog from '../components/dialogs/AddMemberDialog';
+import UserItem from '../components/shared/UserItem';
 
 import { useAsyncMutation, useErrors } from "../hooks/hook";
 import {
@@ -151,7 +157,9 @@ const Groups = () => {
     <>
       <div className='block md:hidden fixed right-[1rem] top-[1rem] text-2xl p-1'>
         <button onClick={handleMobile}>
-            <IoMenu/>
+            {
+              isMobile ? <IoMdClose/> : <IoMenu/>
+            }
         </button>
       </div>
 
@@ -165,7 +173,6 @@ const Groups = () => {
       </div>
     </>
   );
-  
 
   const GroupName =(
     <div className='flex items-center justify-center gap-[1rem] p-[3rem]'>
@@ -201,9 +208,27 @@ const Groups = () => {
     </div>
   )
 
+  const ButtonGroup = (
+    <div className='flex flex-col-reverse md:flex-row items-center gap-[1rem] p-0 md:p-[1rem] lg:pr-[4rem] lg:pl-[4rem]'>
+      <button
+        onClick={openConfirmDeleteHandler} 
+        className='text-xl text-red p-2 flex items-center gap-1 justify-between'
+      >
+        <MdDelete className=''/>
+        Delete Group
+      </button>
+      
+      <button
+        onClick={openAddMemberHandler} 
+        className='text-xl p-2 rounded-md bg-Btnblue text-white flex items-center gap-1 justify-between'
+      >
+        <IoMdAdd/>
+        Add Member
+      </button>
+    </div>
+  )
 
-
-  return (
+  return myGroups.isLoading ? <LayoutLoader/> : (
     <div className='grid grid-flow-col h-[100vh]'>
       
       <div className='hidden md:block md:col-span-4 bg-baseColor'>
@@ -220,10 +245,39 @@ const Groups = () => {
               Members
             </p>
 
-            <div className='max-w-[45rem] w-[100%] box-border p-0 md:p-[1rem] lg:p-[1rem] lg:pl-[4rem] lg:pr-[4rem] gap-[2rem]
-            h-[50vh] overflow-auto bg-bisque'>
-
+            <div className='max-w-[45rem] flex flex-col w-[100%] box-border p-0 md:p-[1rem] lg:p-[1rem] lg:pl-[4rem] lg:pr-[4rem] gap-[2rem]
+            h-[50vh] overflow-auto '>
+                {/* MEMBERS */}
+              {
+                sampleUsers.map((user) => (
+                  <UserItem 
+                    key={user._id}
+                    user = {user}
+                    isAdded
+                    className = "shadow-3xl rounded-2xl p-[1rem] pl-[2rem] pr-[2rem]"
+                    handler = {removeMemberHandler}
+                  />
+                ))
+                
+              }
             </div>
+
+            {ButtonGroup}
+
+            {isAddMember && <>
+                <AddMemberDialog/>
+              </>
+            }
+
+            {confirmDeleteDialog && <>
+                <ConfirmDeleteDialog 
+                  open = {confirmDeleteDialog}
+                  handleClose = {closeConfirmDeleteHandler}
+                  deleteHandler = {deleteHandler}
+                />
+              </>
+            }
+          
           </>
         }
       </div>
