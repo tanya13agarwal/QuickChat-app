@@ -49,7 +49,8 @@ npm install
 npm run start
 ```
 
-  
+<p>5. At times, the chat messages on the chat screen may be seen after reloading the page. Try that too. </p>
+<p>6. Admin can access the admin dashboard using Admin's secret key:- "tanya" </p>
   
 <h2>💻 Built with</h2>
 
