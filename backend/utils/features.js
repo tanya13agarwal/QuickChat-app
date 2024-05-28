@@ -13,7 +13,7 @@ const cookieOptions = {
 
 const connectDB = (uri) => {
   mongoose
-    .connect(uri, { dbName: "QuickChatDB" })
+    .connect(uri, { dbName: "Chattu" })
     .then((data) => console.log(`Connected to DB: ${data.connection.host}`))
     .catch((err) => {
       throw err;
@@ -61,8 +61,7 @@ const uploadFilesToCloudinary = async (files = []) => {
       url: result.secure_url,
     }));
     return formattedResults;
-  } 
-  catch (err) {
+  } catch (err) {
     throw new Error("Error uploading files to cloudinary", err);
   }
 };

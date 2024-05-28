@@ -32,14 +32,11 @@ dotenv.config({
 
 const mongoURI = process.env.MONGO_URI;
 const port = process.env.PORT || 3000;
-// process.env.NODE_ENV.trim() || 
-const envMode = "PRODUCTION";
-
+const envMode = process.env.NODE_ENV.trim() || "PRODUCTION";
 const adminSecretKey = process.env.ADMIN_SECRET_KEY || "adsasdsdfsdfsdfd";
 const userSocketIDs = new Map();
 const onlineUsers = new Set();
 
-console.log("hh ",mongoURI);
 connectDB(mongoURI);
 
 cloudinary.config({

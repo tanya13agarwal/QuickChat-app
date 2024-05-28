@@ -21,19 +21,19 @@ const newUser = TryCatch(async (req, res, next) => {
 
   if (!file) return next(new ErrorHandler("Please Upload Avatar"));
 
-  // const result = await uploadFilesToCloudinary([file]);
+  const result = await uploadFilesToCloudinary([file]);
 
-  // const avatar = {
-  //   public_id: result[0].public_id,
-  //   url: result[0].url,
-  // };
+  const avatar = {
+    public_id: result[0].public_id,
+    url: result[0].url,
+  };
 
   const user = await User.create({
     name,
     bio,
     username,
     password,
-    // avatar,
+    avatar,
   });
 
   sendToken(res, user, 201, "User created");
@@ -95,7 +95,7 @@ const searchUser = TryCatch(async (req, res) => {
   const users = allUsersExceptMeAndFriends.map(({ _id, name, avatar }) => ({
     _id,
     name,
-    // avatar: avatar.url,
+    avatar: avatar.url,
   }));
 
   return res.status(200).json({
