@@ -11,7 +11,7 @@ const api = createApi({
       query: () => ({
         url: "chat/my",
         credentials: "include",
-      }), 
+      }),
       providesTags: ["Chat"],
     }),
 
@@ -19,7 +19,7 @@ const api = createApi({
       query: (name) => ({
         url: `user/search?name=${name}`,
         credentials: "include",
-      }), 
+      }),
       providesTags: ["User"],
     }),
 
@@ -180,4 +180,4 @@ export const {
   useAddGroupMembersMutation,
   useDeleteChatMutation,
   useLeaveGroupMutation,
-} = api; 
+} = api;

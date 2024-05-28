@@ -50,7 +50,6 @@ const miscSlice = createSlice({
 });
 
 export default miscSlice;
- 
 export const {
   setIsNewGroup,
   setIsAddMember,
