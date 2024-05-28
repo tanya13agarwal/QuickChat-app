@@ -4,11 +4,14 @@
 
 <p align="center"><img src="https://img.shields.io/badge/License-MIT-green" alt="shields"></p>
 
+<br></br>
+
 <h2>🚀 Live</h2>
 
 [bvcreurvydueq](bvcreurvydueq)
 
-  
+
+<br></br>
   
 <h2>🧐 Features</h2>
 
@@ -22,6 +25,9 @@ Here're some of the project's best features:
 *   Admin Dashboard :- Admin can View and manage all users registered on the platform Monitor chats and messages for moderation purposes and oversee all chat activities if necessary.
 *   Private Chat :- Team members can chat privately with the admin and other team members and Direct messaging accessible.
 *   User Control :- Users can delete their chat history. They can also unfriend other users removing them from their friend list.
+
+
+<br></br>
 
 <h2>🛠️ Installation Steps:</h2>
 
@@ -51,7 +57,10 @@ npm run start
 
 <p>5. At times, the chat messages on the chat screen may be seen after reloading the page. Try that too. </p>
 <p>6. Admin can access the admin dashboard using Admin's secret key:- "tanya" </p>
-  
+
+
+<br></br>
+
 <h2>💻 Built with</h2>
 
 Technologies used in the project:
@@ -63,6 +72,7 @@ Technologies used in the project:
 *   Cloudinary
 *   Netlify
 
+<br></br>
 <h2>🛡️ License:</h2>
 
 This project is licensed under the MIT License
