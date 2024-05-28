@@ -1,62 +1,65 @@
-import moment from 'moment';
-import React from 'react'
-import { fileFormat } from '../../library/features';
-import { RenderAttachments } from './RenderAttachments';
+import { Box, Typography } from "@mui/material";
+import React, { memo } from "react";
+import { lightBlue } from "../../constants/color";
+import moment from "moment";
+import { fileFormat } from "../../lib/features";
+import RenderAttachment from "./RenderAttachment";
+import { motion } from "framer-motion";
 
-const MessageComponent = ({message , user}) => {
+const MessageComponent = ({ message, user }) => {
+  const { sender, content, attachments = [], createdAt } = message;
 
-    const { sender , content , attachments = [] , createdAt } = message;
+  const sameSender = sender?._id === user?._id;
 
-    const sameSender = sender?._id === user?._id;
-    
-    const timeAgo = moment(createdAt).fromNow();
+  const timeAgo = moment(createdAt).fromNow();
 
   return (
-    <div className= {`bg-white  text-black rounded-[5px] p-[0.5rem] w-fit ${
-        sameSender ? "ml-auto" : "mr-auto"
-    }`}>
-        {
-            !sameSender && (
-                <p className='text-lightBlue font-semibold text-xs'>
-                    {sender.name}
-                </p>
-            )
-        }
+    <motion.div
+      initial={{ opacity: 0, x: "-100%" }}
+      whileInView={{ opacity: 1, x: 0 }}
+      style={{
+        alignSelf: sameSender ? "flex-end" : "flex-start",
+        backgroundColor: "white",
+        color: "black",
+        borderRadius: "5px",
+        padding: "0.5rem",
+        width: "fit-content",
+      }}
+    >
+      {!sameSender && (
+        <Typography color={lightBlue} fontWeight={"600"} variant="caption">
+          {sender.name}
+        </Typography>
+      )}
 
-        {
-            content && (
-                <p className=''>
-                    {content}
-                </p>
-            )
-        }
+      {content && <Typography>{content}</Typography>}
 
-        {
-            attachments.length > 0 && 
-            attachments.map((attachment , index) => {
-                const url = attachment.url;
-                const file = fileFormat(url);
+      {attachments.length > 0 &&
+        attachments.map((attachment, index) => {
+          const url = attachment.url;
+          const file = fileFormat(url);
 
-                return (
-                    <div key={index}>
-                        <a
-                            href={url}
-                            target='_blank'
-                            download
-                            className='text-black'
-                        >
-                            {RenderAttachments(file , url)}
-                        </a>
-                    </div>
-                )
-            }) 
-        }
+          return (
+            <Box key={index}>
+              <a
+                href={url}
+                target="_blank"
+                download
+                style={{
+                  color: "black",
+                }}
+              >
+                {RenderAttachment(file, url)}
+              </a>
+            </Box>
+          );
+        })}
 
-        <p className='text-xs text-darkBaseColor'>
-            {timeAgo}
-        </p>
-    </div>
-  )
-}
+      <Typography variant="caption" color={"text.secondary"}>
+        {timeAgo}
+      </Typography>
+    </motion.div>
+  );
+};
 
-export default MessageComponent
+export default memo(MessageComponent);

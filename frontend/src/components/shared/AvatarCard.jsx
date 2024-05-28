@@ -1,28 +1,37 @@
+import { Avatar, AvatarGroup, Box, Stack } from "@mui/material";
 import React from "react";
-import { transformImage } from "../../library/features";
+import { transformImage } from "../../lib/features";
 
 // Todo Transform
-const AvatarCard = ({ avatar = [] , max = 4}) => {
-  console.log("Avatar: " , avatar)
+const AvatarCard = ({ avatar = [], max = 4 }) => {
   return (
-    <div className="flex  gap-1">
-      <div
-        // max = {max}
-        
+    <Stack direction={"row"} spacing={0.5}>
+      <AvatarGroup
+        max={max}
+        sx={{
+          position: "relative",
+        }}
       >
-        <div className="relative flex w-[5rem] h-[3rem]" >
+        <Box width={"5rem"} height={"3rem"}>
           {avatar.map((i, index) => (
-            <div key={Math.random() * 100}>
-                <img className={`absolute rounded-full border-2 border-white w-[3rem] h-[3rem] left-[${0.5 + index}rem] md:right-[${index}rem]`} 
-                    src={transformImage(i)}
-                    alt={`Avatar ${index}`}
-                />
-                
-            </div>
+            <Avatar
+              key={Math.random() * 100}
+              src={transformImage(i)}
+              alt={`Avatar ${index}`}
+              sx={{
+                width: "3rem",
+                height: "3rem",
+                position: "absolute",
+                left: {
+                  xs: `${0.5 + index}rem`,
+                  sm: `${index}rem`,
+                },
+              }}
+            />
           ))}
-        </div>
-      </div>
-    </div>
+        </Box>
+      </AvatarGroup>
+    </Stack>
   );
 };
 

@@ -1,5 +1,3 @@
-
-// see if you need
 import { Skeleton, keyframes, styled } from "@mui/material";
 import { Link as LinkComponent } from "react-router-dom";
 import { grayColor, matBlack } from "../../constants/color";

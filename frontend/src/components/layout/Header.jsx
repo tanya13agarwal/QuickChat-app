@@ -1,131 +1,181 @@
-import {useState} from 'react'
-import { IoMenu } from "react-icons/io5";
-import { IoMdSearch } from "react-icons/io";
-import { IoMdAdd } from "react-icons/io";
-import { MdGroup } from "react-icons/md";
-import { FaBell } from "react-icons/fa";
-import { MdOutlineLogout } from "react-icons/md";
+import {
+  AppBar,
+  Backdrop,
+  Badge,
+  Box,
+  IconButton,
+  Toolbar,
+  Tooltip,
+  Typography,
+} from "@mui/material";
+import React, { Suspense, lazy, useState } from "react";
+import { orange } from "../../constants/color";
+import {
+  Add as AddIcon,
+  Menu as MenuIcon,
+  Search as SearchIcon,
+  Group as GroupIcon,
+  Logout as LogoutIcon,
+  Notifications as NotificationsIcon,
+} from "@mui/icons-material";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { server } from "../../constants/config";
+import toast from "react-hot-toast";
+import { useDispatch, useSelector } from "react-redux";
+import { userNotExists } from "../../redux/reducers/auth";
+import {
+  setIsMobile,
+  setIsNewGroup,
+  setIsNotification,
+  setIsSearch,
+} from "../../redux/reducers/misc";
+import { resetNotificationCount } from "../../redux/reducers/chat";
 
-import SearchModal from '../modal/SearchModal';
-import NewGroupModal from '../modal/NewGroupModal';
-import NotificationModal from '../modal/NotificationModal';
-import { useNavigate } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
-import { setIsMobile, setIsSearch, setIsNewGroup, setIsNotification } from '../../redux/reducers/misc';
-import { resetNotificationCount } from '../../redux/reducers/chat';
+const SearchDialog = lazy(() => import("../specific/Search"));
+const NotifcationDialog = lazy(() => import("../specific/Notifications"));
+const NewGroupDialog = lazy(() => import("../specific/NewGroup"));
 
 const Header = () => {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
 
-    const navigate = useNavigate();
-    const dispatch = useDispatch();
+  const { isSearch, isNotification, isNewGroup } = useSelector(
+    (state) => state.misc
+  );
+  const { notificationCount } = useSelector((state) => state.chat);
 
-    const { isSearch, isNotification, isNewGroup } = useSelector( (state) => state.misc );
-    const { notificationCount } = useSelector((state) => state.chat);
-    
+  const handleMobile = () => dispatch(setIsMobile(true));
 
-    const handleMobile = () => dispatch(setIsMobile(true)); 
+  const openSearch = () => dispatch(setIsSearch(true));
 
-    const openSearch = () => dispatch(setIsSearch(true));
+  const openNewGroup = () => {
+    dispatch(setIsNewGroup(true));
+  };
 
+  const openNotification = () => {
+    dispatch(setIsNotification(true));
+    dispatch(resetNotificationCount());
+  };
 
-    const openNewGroup = () => {
-        dispatch(setIsNewGroup(true));
-      };
-    
-      const openNotification = () => {
-        dispatch(setIsNotification(true));
-        dispatch(resetNotificationCount());
-      };
-    
-      const navigateToGroup = () => navigate("/groups");
+  const navigateToGroup = () => navigate("/groups");
 
-    const LogoutHandler = async () => {
-        try {
-            const { data } = await axios.get(`${server}/api/v1/user/logout`, {
-              withCredentials: true,
-            });
-            dispatch(userNotExists());
-            toast.success(data.message);
-        }
-        catch (error) {
-            toast.error(error?.response?.data?.message || "Something went wrong");
-        } 
+  const logoutHandler = async () => {
+    try {
+      const { data } = await axios.get(`${server}/api/v1/user/logout`, {
+        withCredentials: true,
+      });
+      dispatch(userNotExists());
+      toast.success(data.message);
+    } catch (error) {
+      toast.error(error?.response?.data?.message || "Something went wrong");
     }
+  };
 
   return (
     <>
-        <div className='flex items-center justify-between static bg-baseColor h-[4rem] transition-all duration-200'>
-        <>
-            <p className="hidden md:block text-white font-semibold text-xl p-5">
-                QuickChat
-            </p>
-            <button onClick={handleMobile}>
-                <IoMenu className="md:hidden text-white m-5 text-3xl"/>
-            </button>
-        </>
+      <Box sx={{ flexGrow: 1 }} height={"4rem"}>
+        <AppBar
+          position="static"
+          sx={{
+            bgcolor: orange,
+          }}
+        >
+          <Toolbar>
+            <Typography
+              variant="h6"
+              sx={{
+                display: { xs: "none", sm: "block" },
+              }}
+            >
+              Chattu
+            </Typography>
 
-        <div className="flex justify-between items-center text-white text-2xl gap-4 m-5">
-            <button
-                className="hover:bg-gray hover:rounded-full p-2"
+            <Box
+              sx={{
+                display: { xs: "block", sm: "none" },
+              }}
+            >
+              <IconButton color="inherit" onClick={handleMobile}>
+                <MenuIcon />
+              </IconButton>
+            </Box>
+            <Box
+              sx={{
+                flexGrow: 1,
+              }}
+            />
+            <Box>
+              <IconBtn
+                title={"Search"}
+                icon={<SearchIcon />}
                 onClick={openSearch}
-            >
-                <IoMdSearch/>
-            </button>
+              />
 
-            <button
-                className="hover:bg-gray hover:rounded-full p-2"
+              <IconBtn
+                title={"New Group"}
+                icon={<AddIcon />}
                 onClick={openNewGroup}
-            >
-                <IoMdAdd/>
-            </button>
+              />
 
-            <button
-                className="hover:bg-gray hover:rounded-full p-2"
-                onClick={(navigateToGroup)}
-            >
-                <MdGroup/>
-            </button>
+              <IconBtn
+                title={"Manage Groups"}
+                icon={<GroupIcon />}
+                onClick={navigateToGroup}
+              />
 
-            <button
-                className="hover:bg-gray hover:rounded-full p-2"
+              <IconBtn
+                title={"Notifications"}
+                icon={<NotificationsIcon />}
                 onClick={openNotification}
-            >
-                <FaBell/>
-            </button>
+                value={notificationCount}
+              />
 
-            <button
-                className="hover:bg-gray hover:rounded-full p-2"
-                onClick={LogoutHandler}
-            >
-                <MdOutlineLogout/>
-            </button> 
+              <IconBtn
+                title={"Logout"}
+                icon={<LogoutIcon />}
+                onClick={logoutHandler}
+              />
+            </Box>
+          </Toolbar>
+        </AppBar>
+      </Box>
 
-        </div>
-        
+      {isSearch && (
+        <Suspense fallback={<Backdrop open />}>
+          <SearchDialog />
+        </Suspense>
+      )}
 
-        </div>
-        {isSearch && <SearchModal/>}
-        {isNewGroup && <NewGroupModal/>}
-        {isNotification  && <NotificationModal/>}
+      {isNotification && (
+        <Suspense fallback={<Backdrop open />}>
+          <NotifcationDialog />
+        </Suspense>
+      )}
+
+      {isNewGroup && (
+        <Suspense fallback={<Backdrop open />}>
+          <NewGroupDialog />
+        </Suspense>
+      )}
     </>
-  )
+  );
 };
 
-// redesign:- notification ko value dete hi notif icon pe uska count likh k ayega
-// const IconBtn = ({ title, icon, onClick, value }) => {
-//     return (
-//       <div title={title}>
-//         <button color="inherit" size="large" onClick={onClick}>
-//           {value ? (
-//             <span badgeContent={value} color="error">
-//               {icon}
-//             </span>
-//           ) : (
-//             icon
-//           )}
-//         </button>
-//       </div>
-//     );
-// };
+const IconBtn = ({ title, icon, onClick, value }) => {
+  return (
+    <Tooltip title={title}>
+      <IconButton color="inherit" size="large" onClick={onClick}>
+        {value ? (
+          <Badge badgeContent={value} color="error">
+            {icon}
+          </Badge>
+        ) : (
+          icon
+        )}
+      </IconButton>
+    </Tooltip>
+  );
+};
 
-export default Header
+export default Header;
