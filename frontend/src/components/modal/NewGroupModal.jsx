@@ -99,7 +99,7 @@ const NewGroupModal = () => {
                   Cancel
                 </button>
                 <button 
-                  onClick={SubmitHandler}
+                  onClick={submitHandler}
                   disabled={isLoadingNewGroup}
                   className='bg-Btnblue text-white text-md w-[25%] p-2 rounded-md'
                 >

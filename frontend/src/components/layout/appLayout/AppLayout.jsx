@@ -85,12 +85,13 @@ const AppLayout = () => ( WrappedComponent ) => {
           {
             isLoading ?  
               (<div/>) : (
-              <Drawer open={isMobile} onClose={handleMobileClose}>
+                // drawer
+              <div open={isMobile} onClose={handleMobileClose}>
                 <ChatList className="w-[70vw]"
                 chats={data?.chats}
                 chatId={chatId}
                 handleDeleteChat={handleDeleteChat}/>
-              </Drawer>)
+              </div>)
           }
 
           <div className="grid lg:grid-cols-4 md:grid-cols-3 h-[calc(100vh-4rem)]">

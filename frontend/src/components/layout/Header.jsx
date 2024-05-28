@@ -114,17 +114,17 @@ const Header = () => {
 // redesign:- notification ko value dete hi notif icon pe uska count likh k ayega
 // const IconBtn = ({ title, icon, onClick, value }) => {
 //     return (
-//       <Tooltip title={title}>
-//         <IconButton color="inherit" size="large" onClick={onClick}>
+//       <div title={title}>
+//         <button color="inherit" size="large" onClick={onClick}>
 //           {value ? (
-//             <Badge badgeContent={value} color="error">
+//             <span badgeContent={value} color="error">
 //               {icon}
-//             </Badge>
+//             </span>
 //           ) : (
 //             icon
 //           )}
-//         </IconButton>
-//       </Tooltip>
+//         </button>
+//       </div>
 //     );
 // };
 

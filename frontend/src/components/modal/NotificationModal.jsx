@@ -25,8 +25,7 @@ const NotificationModal = () => {
   useErrors([{ error, isError }]);
 
   return (
-    // dialog open={isNotification} onClose={closeHandler}
-    <div className='fixed inset-0 z-[1000] !mt-0 grid place-items-center overflow-auto bg-white bg-opacity-10 backdrop-blur-sm'>
+    <div open={isNotification} onClose={closeHandler} className='fixed inset-0 z-[1000] !mt-0 grid place-items-center overflow-auto bg-white bg-opacity-10 backdrop-blur-sm'>
         <div className='w-11/12 max-w-[400px] flex flex-col items-center justify-center rounded-lg border gap-5 bg-white p-6'>
             <p className='text-2xl font-semibold'>
                 Notifications
@@ -36,10 +35,9 @@ const NotificationModal = () => {
                 isLoading ? (<div/>) : (
                   <div>
                   {
-                    // data?.allRequests
-                    sampleNotifications.length > 0 ? 
+                    data?.allRequests.length > 0 ? 
                     (
-                      sampleNotifications.map(({sender , _id}) => 
+                      data?.allRequests?.map(({sender , _id}) => 
                       <NotificationItem 
                         key={_id}
                         sender = {sender}
