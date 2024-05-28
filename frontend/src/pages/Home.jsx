@@ -1,13 +1,16 @@
-import React from 'react'
-
-import AppLayout from '../components/layout/appLayout/AppLayout'
+import React from "react";
+import AppLayout from "../components/layout/AppLayout";
+import { Box, Typography } from "@mui/material";
+import { grayColor } from "../constants/color";
 
 const Home = () => {
   return (
-    <div className='text-xl p-[2rem] text-center bg-linkHover h-full'>
-      Select a friend to chat
-    </div>
-  )
-}
+    <Box bgcolor={grayColor} height={"100%"}>
+      <Typography p={"2rem"} variant="h5" textAlign={"center"}>
+        Select a friend to chat
+      </Typography>
+    </Box>
+  );
+};
 
 export default AppLayout()(Home);

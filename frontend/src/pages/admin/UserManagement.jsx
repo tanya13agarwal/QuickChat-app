@@ -1,8 +1,11 @@
+import { useFetchData } from "6pp";
+import { Avatar, Skeleton } from "@mui/material";
 import React, { useEffect, useState } from "react";
-import AdminLayout from "../../components/layout/adminLayout/AdminLayout";
+import AdminLayout from "../../components/layout/AdminLayout";
 import Table from "../../components/shared/Table";
+import { server } from "../../constants/config";
 import { useErrors } from "../../hooks/hook";
-import { transformImage } from "../../library/features";
+import { transformImage } from "../../lib/features";
 
 const columns = [
   {
@@ -17,7 +20,7 @@ const columns = [
     headerClassName: "table-header",
     width: 150,
     renderCell: (params) => (
-      <img alt={params.row.name} src={params.row.avatar} />
+      <Avatar alt={params.row.name} src={params.row.avatar} />
     ),
   },
 
@@ -76,7 +79,7 @@ const UserManagement = () => {
   return (
     <AdminLayout>
       {loading ? (
-        <div height={"100vh"} />
+        <Skeleton height={"100vh"} />
       ) : (
         <Table heading={"All Users"} columns={columns} rows={rows} />
       )}

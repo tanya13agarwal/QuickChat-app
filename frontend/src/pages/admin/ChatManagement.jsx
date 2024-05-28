@@ -1,8 +1,12 @@
+import { useFetchData } from "6pp";
+import { Avatar, Skeleton, Stack } from "@mui/material";
 import React, { useEffect, useState } from "react";
-import AdminLayout from "../../components/layout/adminLayout/AdminLayout";
+import AdminLayout from "../../components/layout/AdminLayout";
 import AvatarCard from "../../components/shared/AvatarCard";
 import Table from "../../components/shared/Table";
-import { transformImage } from "../../library/features";
+import { server } from "../../constants/config";
+import { useErrors } from "../../hooks/hook";
+import { transformImage } from "../../lib/features";
 
 const columns = [
   {
@@ -59,10 +63,10 @@ const columns = [
     headerClassName: "table-header",
     width: 250,
     renderCell: (params) => (
-      <div direction="row" alignItems="center" spacing={"1rem"}>
-        <img alt={params.row.creator.name} src={params.row.creator.avatar} />
+      <Stack direction="row" alignItems="center" spacing={"1rem"}>
+        <Avatar alt={params.row.creator.name} src={params.row.creator.avatar} />
         <span>{params.row.creator.name}</span>
-      </div>
+      </Stack>
     ),
   },
 ];
@@ -102,7 +106,7 @@ const ChatManagement = () => {
   return (
     <AdminLayout>
       {loading ? (
-        <div height={"100vh"} />
+        <Skeleton height={"100vh"} />
       ) : (
         <Table heading={"All Chats"} columns={columns} rows={rows} />
       )}

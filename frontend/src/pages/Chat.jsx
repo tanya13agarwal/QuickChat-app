@@ -1,22 +1,21 @@
-import React, { useRef, useEffect, useState, useCallback } from 'react';
-
-import AppLayout from '../components/layout/appLayout/AppLayout';
-
-import { MdAttachFile } from "react-icons/md";
-import { IoMdSend } from "react-icons/io";
-
-import { useDispatch } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
-
-import AppLayout from '../components/layout/appLayout/AppLayout';
-import FileMenu from '../components/dialogs/FileMenu';
-import { sampleMessage } from '../data/sampleData';
-import MessageComponent from '../components/shared/MessageComponent';
-import { getSocket } from '../utils/socket';
-
-// ye kya h check kro?
-import { useInfiniteScrollTop } from "6pp";
-
+import React, {
+  Fragment,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
+import AppLayout from "../components/layout/AppLayout";
+import { IconButton, Skeleton, Stack } from "@mui/material";
+import { grayColor, orange } from "../constants/color";
+import {
+  AttachFile as AttachFileIcon,
+  Send as SendIcon,
+} from "@mui/icons-material";
+import { InputBox } from "../components/styles/StyledComponents";
+import FileMenu from "../components/dialogs/FileMenu";
+import MessageComponent from "../components/shared/MessageComponent";
+import { getSocket } from "../socket";
 import {
   ALERT,
   CHAT_JOINED,
@@ -24,22 +23,18 @@ import {
   NEW_MESSAGE,
   START_TYPING,
   STOP_TYPING,
-} from "../../../backend/constants/events";
-
+} from "../constants/events";
 import { useChatDetailsQuery, useGetMessagesQuery } from "../redux/api/api";
 import { useErrors, useSocketEvents } from "../hooks/hook";
-import { setIsFileMenu } from '../redux/reducers/misc';
+import { useInfiniteScrollTop } from "6pp";
+import { useDispatch } from "react-redux";
+import { setIsFileMenu } from "../redux/reducers/misc";
+import { removeNewMessagesAlert } from "../redux/reducers/chat";
+import { TypingLoader } from "../components/layout/Loaders";
+import { useNavigate } from "react-router-dom";
 
- 
-const Chat = (chatId, user) => {
-
+const Chat = ({ chatId, user }) => {
   const socket = getSocket();
-
-  // const user = {
-  //   _id:"123344",
-  //   name : "Madara Uchihaa"
-  // }
-
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -75,7 +70,7 @@ const Chat = (chatId, user) => {
   const members = chatDetails?.data?.chat?.members;
 
   const messageOnChange = (e) => {
-    setMessage(e.target.value); 
+    setMessage(e.target.value);
 
     if (!IamTyping) {
       socket.emit(START_TYPING, { members, chatId });
@@ -172,7 +167,6 @@ const Chat = (chatId, user) => {
   );
 
   const eventHandler = {
-    // [ALERT] will go as strings now 
     [ALERT]: alertListener,
     [NEW_MESSAGE]: newMessagesListener,
     [START_TYPING]: startTypingListener,
@@ -185,44 +179,82 @@ const Chat = (chatId, user) => {
 
   const allMessages = [...oldMessages, ...messages];
 
-  return chatDetails.isLoading ? (<div/>) : (
+  return chatDetails.isLoading ? (
+    <Skeleton />
+  ) : (
+    <Fragment>
+      <Stack
+        ref={containerRef}
+        boxSizing={"border-box"}
+        padding={"1rem"}
+        spacing={"1rem"}
+        bgcolor={grayColor}
+        height={"90%"}
+        sx={{
+          overflowX: "hidden",
+          overflowY: "auto",
+        }}
+      >
+        {allMessages.map((i) => (
+          <MessageComponent key={i._id} message={i} user={user} />
+        ))}
 
-        <div className='h-[100%] w-full'>
-        <div
-          ref={containerRef}
-          className='box-border p-[1rem] gap-[1rem] bg-grayColor h-[90%] overflow-x-hidden overflow-y-auto  '
+        {userTyping && <TypingLoader />}
+
+        <div ref={bottomRef} />
+      </Stack>
+
+      <form
+        style={{
+          height: "10%",
+        }}
+        onSubmit={submitHandler}
+      >
+        <Stack
+          direction={"row"}
+          height={"100%"}
+          padding={"1rem"}
+          alignItems={"center"}
+          position={"relative"}
         >
-          {
-            allMessages.map((message) => (
-              <MessageComponent key={message._id} message = {message} user = {user} />
-            ))
-          }
-        </div>    
-  
-        <form className='h-[10%]' onSubmit={submitHandler}>
-            <div className='flex h-[100%] p-[1rem] items-center relative'>
-              <button onClick={handleFileOpen}
-               className='absolute rounded-full p-[0.5rem] left-[1.5rem] rotate-[30deg] text-lg'>
-                  <MdAttachFile/>
-              </button>
-  
-              <input
-                placeholder='Type message here...' value={message} onChange={messageOnChange}
-                className='w-[100%] h-[100%] border-none outline-none p-0 pl-[3rem] pr-[3rem] bg-grayColor '
-              />
-  
-              <button 
-                className='bg-baseColor text-white ml-[1rem] p-[0.5rem] rounded-full  hover:bg-darkBaseColor'
-                type='submit'
-              >
-                  <IoMdSend className=''/> 
-              </button>
-            </div>
-        </form>
-        <FileMenu anchorE1={fileMenuAnchor}/>
-      </div>
-      )
+          <IconButton
+            sx={{
+              position: "absolute",
+              left: "1.5rem",
+              rotate: "30deg",
+            }}
+            onClick={handleFileOpen}
+          >
+            <AttachFileIcon />
+          </IconButton>
 
+          <InputBox
+            placeholder="Type Message Here..."
+            value={message}
+            onChange={messageOnChange}
+          />
+
+          <IconButton
+            type="submit"
+            sx={{
+              rotate: "-30deg",
+              bgcolor: orange,
+              color: "white",
+              marginLeft: "1rem",
+              padding: "0.5rem",
+              "&:hover": {
+                bgcolor: "error.dark",
+              },
+            }}
+          >
+            <SendIcon />
+          </IconButton>
+        </Stack>
+      </form>
+
+      <FileMenu anchorE1={fileMenuAnchor} chatId={chatId} />
+    </Fragment>
+  );
 };
 
 export default AppLayout()(Chat);

@@ -1,91 +1,95 @@
-import { useState } from "react"
-import { useForm } from "react-hook-form"
-import { useEffect } from "react";
-
-
+import { useInputValidation } from "6pp";
+import {
+  Button,
+  Container,
+  Paper,
+  TextField,
+  Typography
+} from "@mui/material";
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { Navigate } from "react-router-dom";
+import { bgGradient } from "../../constants/color";
+import { adminLogin, getAdmin } from "../../redux/thunks/admin";
 
 const AdminLogin = () => {
-    const isAdmin = true;
+  const { isAdmin } = useSelector((state) => state.auth);
 
+  const dispatch = useDispatch();
 
-    const [loading, setLoading] = useState(false);
+  const secretKey = useInputValidation("");
 
-    // if(isAdmin) {
-    //     return <Navigate to = "/admin/dashboard" />
-    // }
+  const submitHandler = (e) => {
+    e.preventDefault();
+    dispatch(adminLogin(secretKey.value));
+  };
 
-    // fetch this data from useForm hook
-    const {
-        register,
-        handleSubmit,
-        reset,
-        formState: {errors , isSubmitSuccessful},
-      } = useForm();
-    
-      useEffect(() => {
-        if(isSubmitSuccessful) {
-          reset({
-            secretKey: "",
-          })
-        }
-      },[reset , isSubmitSuccessful]);
+  useEffect(() => {
+    dispatch(getAdmin());
+  }, [dispatch]);
 
-    const submitHandler = (e) => {
-        e.preventDefault()
-    }
-    
-    return (
-        <div className='bg-gradient-to-r from-baseColor to-baseColor2'>
-                {loading ? (
-                    <div className="spinner"></div>
-                ) 
-                : (
-                    <div className="w-11/12 mx-auto flex flex-col items-center justify-center h-screen ">
-                        <div className="w-[25%] pt-10 pb-10 flex flex-col items-center justify-center gap-5 bg-white shadow-2xl">
-                            <p className="text-xl font-semibold">
-                                Admin Login
-                            </p>
-                                
-                            <form onSubmit={handleSubmit(submitHandler)}
-                                className="w-full flex flex-col items-center justify-center gap-3"
-                            >
+  if (isAdmin) return <Navigate to="/admin/dashboard" />;
 
-                                {/* Password Field */}
-                                <div className="flex flex-col w-[80%]">
-                                    <input
-                                        type="password"
-                                        name="secretKey"
-                                        id="secretKey"
-                                        placeholder="Password *"
-                                        className="form-style focus:outline-none"
-                                        {...register("secretKey", { required: true })}
-                                    />
-                                    {errors.secretKey && (
-                                    <span className="-mt-1 text-[12px] text-red">
-                                        *Please enter your correct password
-                                    </span>
-                                    )}
-                                </div>
-                            
-                                {/* Submit button for Login Or Signup */}
+  return (
+    <div
+      style={{
+        backgroundImage: bgGradient,
+      }}
+    >
+      <Container
+        component={"main"}
+        maxWidth="xs"
+        sx={{
+          height: "100vh",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <Paper
+          elevation={3}
+          sx={{
+            padding: 4,
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+          }}
+        >
+          <Typography variant="h5">Admin Login</Typography>
+          <form
+            style={{
+              width: "100%",
+              marginTop: "1rem",
+            }}
+            onSubmit={submitHandler}
+          >
+            <TextField
+              required
+              fullWidth
+              label="Secret Key"
+              type="password"
+              margin="normal"
+              variant="outlined"
+              value={secretKey.value}
+              onChange={secretKey.changeHandler}
+            />
 
-                                {/* Login */}
-                                <button
-                                    type="submit"
-                                    className="w-[80%] bg-Btnblue p-2 text-white rounded-sm  mt-2 mb-2 hover:scale-95 transition-all
-                                    duration-200"
-                                >
-                                    Login
-                                </button>
+            <Button
+              sx={{
+                marginTop: "1rem",
+              }}
+              variant="contained"
+              color="primary"
+              type="submit"
+              fullWidth
+            >
+              Login
+            </Button>
+          </form>
+        </Paper>
+      </Container>
+    </div>
+  );
+};
 
-                                </form>
-                            </div>
-                        </div>
-                    )
-                }
-            
-            </div>
-    )
-}
-
-export default AdminLogin
+export default AdminLogin;

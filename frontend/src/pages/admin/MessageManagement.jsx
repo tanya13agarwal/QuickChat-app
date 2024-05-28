@@ -1,10 +1,13 @@
+import { useFetchData } from "6pp";
+import { Avatar, Box, Stack } from "@mui/material";
 import moment from "moment";
 import React, { useEffect, useState } from "react";
-import AdminLayout from "../../components/layout/adminLayout/AdminLayout";
-import { RenderAttachments } from "../../components/shared/RenderAttachments";
+import AdminLayout from "../../components/layout/AdminLayout";
+import RenderAttachment from "../../components/shared/RenderAttachment";
 import Table from "../../components/shared/Table";
+import { server } from "../../constants/config";
 import { useErrors } from "../../hooks/hook";
-import { fileFormat , transformImage } from "../../library/features";
+import { fileFormat, transformImage } from "../../lib/features";
 
 const columns = [
   {
@@ -27,7 +30,7 @@ const columns = [
             const file = fileFormat(url);
 
             return (
-              <div>
+              <Box>
                 <a
                   href={url}
                   download
@@ -36,9 +39,9 @@ const columns = [
                     color: "black",
                   }}
                 >
-                  {RenderAttachments(file, url)}
+                  {RenderAttachment(file, url)}
                 </a>
-              </div>
+              </Box>
             );
           })
         : "No Attachments";
@@ -57,10 +60,10 @@ const columns = [
     headerClassName: "table-header",
     width: 200,
     renderCell: (params) => (
-      <div className="flex gap-4 items-center">
-        <img alt={params.row.sender.name} src={params.row.sender.avatar} />
+      <Stack direction={"row"} spacing={"1rem"} alignItems={"center"}>
+        <Avatar alt={params.row.sender.name} src={params.row.sender.avatar} />
         <span>{params.row.sender.name}</span>
-      </div>
+      </Stack>
     ),
   },
   {
@@ -117,7 +120,7 @@ const MessageManagement = () => {
   return (
     <AdminLayout>
       {loading ? (
-        <div className="h-[100vh]" />
+        <Skeleton height={"100vh"} />
       ) : (
         <Table
           heading={"All Messages"}

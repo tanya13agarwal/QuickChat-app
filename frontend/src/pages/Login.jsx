@@ -1,153 +1,331 @@
-import { useState } from "react"
-import { useForm } from "react-hook-form"
-import { Link } from "react-router-dom"
-
-import {toast} from "react-hot-toast"
+import { useFileHandler, useInputValidation } from "6pp";
+import { CameraAlt as CameraAltIcon } from "@mui/icons-material";
+import {
+  Avatar,
+  Button,
+  Container,
+  IconButton,
+  Paper,
+  Stack,
+  TextField,
+  Typography,
+} from "@mui/material";
+import axios from "axios";
+import React, { useState } from "react";
+import toast from "react-hot-toast";
+import { useDispatch } from "react-redux";
+import { VisuallyHiddenInput } from "../components/styles/StyledComponents";
+import { bgGradient } from "../constants/color";
+import { server } from "../constants/config";
+import { userExists } from "../redux/reducers/auth";
+import { usernameValidator } from "../utils/validators";
 
 const Login = () => {
+  const [isLogin, setIsLogin] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
 
-    const [loading, setLoading] = useState(false);
-    // fetch this data from useForm hook
-    const {
-      register,
-      handleSubmit,
-      reset,
-      formState: {errors , isSubmitSuccessful},
-    } = useForm();
-  
-    useEffect(() => {
-      if(isSubmitSuccessful) {
-        reset({
-          username: "",
-          password: "",
-        })
-      }
-    },[reset , isSubmitSuccessful]);
-    // const handleLogin = () => {
-    //     alert("form submitted");
-    // }
+  const toggleLogin = () => setIsLogin((prev) => !prev);
 
-    const handleLogin = async (e) => {
-        e.preventDefault();
-    
-        const toastId = toast.loading("Logging In...");
-    
-        setLoading(true);
+  const name = useInputValidation("");
+  const bio = useInputValidation("");
+  const username = useInputValidation("", usernameValidator);
+  const password = useInputValidation("");
 
-        const config = {
-          withCredentials: true,
-          headers: {
-            "Content-Type": "application/json",
-          },
-        };
-    
-        try {
-          const { data } = await axios.post(
-            `${server}/api/v1/user/login`,
-            {
-              username: username.value,
-              password: password.value,
-            },
-            config
-          );
-          dispatch(userExists(data.user));
-          toast.success(data.message, {
-            id: toastId,
-          });
-        }
-        catch (error) {
-          toast.error(error?.response?.data?.message || "Something Went Wrong", {
-            id: toastId,
-          });
-        }
-        finally {
-          setLoading(false);
-        }
-      };
+  const avatar = useFileHandler("single");
 
+  const dispatch = useDispatch();
 
-    return (
+  const handleLogin = async (e) => {
+    e.preventDefault();
 
-        <div className='bg-gradient-to-r from-baseColor to-baseColor2'>
-            {loading ? (
-                <div className="spinner"></div>
-            ) 
-            : (
-                <div className="w-11/12 mx-auto flex flex-col items-center justify-center h-screen ">
-                    <div className="w-[25%] pt-10 pb-10 flex flex-col items-center justify-center gap-5 bg-white shadow-2xl">
-                        <p className="text-xl font-semibold">
-                            Login
-                        </p>
-                            
-                        <form onSubmit={handleSubmit(handleLogin)}
-                            className="w-full flex flex-col items-center justify-center gap-3"
-                        >
+    const toastId = toast.loading("Logging In...");
 
-                            {/* Username field */}
-                            <div className="flex flex-col w-[80%]">
-                                <input
-                                type="text"
-                                name="username"
-                                id="username"
-                                placeholder="Username *"
-                                className="form-style focus:outline-none"
-                                {...register("username", { required: true })}
-                                />
-                                {errors.username && (
-                                <span className="-mt-1 text-[12px] text-red">
-                                    *Please enter your correct username
-                                </span>
-                                )}
-                            </div>
+    setIsLoading(true);
+    const config = {
+      withCredentials: true,
+      headers: {
+        "Content-Type": "application/json",
+      },
+    };
 
-                            {/* Password Field */}
-                            <div className="flex flex-col w-[80%]">
-                                <input
-                                    type="password"
-                                    name="password"
-                                    id="password"
-                                    placeholder="Password *"
-                                    className="form-style focus:outline-none"
-                                    {...register("password", { required: true })}
-                                />
-                                {errors.password && (
-                                <span className="-mt-1 text-[12px] text-red">
-                                    *Please enter your correct password
-                                </span>
-                                )}
-                            </div>
-                        
-                            {/* Submit button for Login Or Signup */}
+    try {
+      const { data } = await axios.post(
+        `${server}/api/v1/user/login`,
+        {
+          username: username.value,
+          password: password.value,
+        },
+        config
+      );
+      dispatch(userExists(data.user));
+      toast.success(data.message, {
+        id: toastId,
+      });
+    } catch (error) {
+      toast.error(error?.response?.data?.message || "Something Went Wrong", {
+        id: toastId,
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
-                            {/* Login */}
-                            <button
-                                type="submit"
-                                className="w-[80%] bg-Btnblue p-2 text-white rounded-sm  mt-2 mb-2 hover:scale-95 transition-all
-                                duration-200"
-                            >
-                                Login
-                            </button>
+  const handleSignUp = async (e) => {
+    e.preventDefault();
 
-                            <p>Or</p>
+    const toastId = toast.loading("Signing Up...");
+    setIsLoading(true);
 
-                            {/* Register */}
-                            <Link to="/signup">
-                                <button
-                                    className="text-Btnblue hover:underline transition-all duration-200"
-                                >
-                                    Sign Up Instead
-                                </button>
-                            </Link>
+    const formData = new FormData();
+    formData.append("avatar", avatar.file);
+    formData.append("name", name.value);
+    formData.append("bio", bio.value);
+    formData.append("username", username.value);
+    formData.append("password", password.value);
 
-                            </form>
-                        </div>
-                    </div>
-                )
-            }
-        
-        </div>
+    const config = {
+      withCredentials: true,
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    };
 
-    )
-}
+    try {
+      const { data } = await axios.post(
+        `${server}/api/v1/user/new`,
+        formData,
+        config
+      );
 
-export default Login
+      dispatch(userExists(data.user));
+      toast.success(data.message, {
+        id: toastId,
+      });
+    } catch (error) {
+      toast.error(error?.response?.data?.message || "Something Went Wrong", {
+        id: toastId,
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  return (
+    <div
+      style={{
+        backgroundImage: bgGradient,
+      }}
+    >
+      <Container
+        component={"main"}
+        maxWidth="xs"
+        sx={{
+          height: "100vh",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <Paper
+          elevation={3}
+          sx={{
+            padding: 4,
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+          }}
+        >
+          {isLogin ? (
+            <>
+              <Typography variant="h5">Login</Typography>
+              <form
+                style={{
+                  width: "100%",
+                  marginTop: "1rem",
+                }}
+                onSubmit={handleLogin}
+              >
+                <TextField
+                  required
+                  fullWidth
+                  label="Username"
+                  margin="normal"
+                  variant="outlined"
+                  value={username.value}
+                  onChange={username.changeHandler}
+                />
+
+                <TextField
+                  required
+                  fullWidth
+                  label="Password"
+                  type="password"
+                  margin="normal"
+                  variant="outlined"
+                  value={password.value}
+                  onChange={password.changeHandler}
+                />
+
+                <Button
+                  sx={{
+                    marginTop: "1rem",
+                  }}
+                  variant="contained"
+                  color="primary"
+                  type="submit"
+                  fullWidth
+                  disabled={isLoading}
+                >
+                  Login
+                </Button>
+
+                <Typography textAlign={"center"} m={"1rem"}>
+                  OR
+                </Typography>
+
+                <Button
+                  disabled={isLoading}
+                  fullWidth
+                  variant="text"
+                  onClick={toggleLogin}
+                >
+                  Sign Up Instead
+                </Button>
+              </form>
+            </>
+          ) : (
+            <>
+              <Typography variant="h5">Sign Up</Typography>
+              <form
+                style={{
+                  width: "100%",
+                  marginTop: "1rem",
+                }}
+                onSubmit={handleSignUp}
+              >
+                <Stack position={"relative"} width={"10rem"} margin={"auto"}>
+                  <Avatar
+                    sx={{
+                      width: "10rem",
+                      height: "10rem",
+                      objectFit: "contain",
+                    }}
+                    src={avatar.preview}
+                  />
+
+                  <IconButton
+                    sx={{
+                      position: "absolute",
+                      bottom: "0",
+                      right: "0",
+                      color: "white",
+                      bgcolor: "rgba(0,0,0,0.5)",
+                      ":hover": {
+                        bgcolor: "rgba(0,0,0,0.7)",
+                      },
+                    }}
+                    component="label"
+                  >
+                    <>
+                      <CameraAltIcon />
+                      <VisuallyHiddenInput
+                        type="file"
+                        onChange={avatar.changeHandler}
+                      />
+                    </>
+                  </IconButton>
+                </Stack>
+
+                {avatar.error && (
+                  <Typography
+                    m={"1rem auto"}
+                    width={"fit-content"}
+                    display={"block"}
+                    color="error"
+                    variant="caption"
+                  >
+                    {avatar.error}
+                  </Typography>
+                )}
+
+                <TextField
+                  required
+                  fullWidth
+                  label="Name"
+                  margin="normal"
+                  variant="outlined"
+                  value={name.value}
+                  onChange={name.changeHandler}
+                />
+
+                <TextField
+                  required
+                  fullWidth
+                  label="Bio"
+                  margin="normal"
+                  variant="outlined"
+                  value={bio.value}
+                  onChange={bio.changeHandler}
+                />
+                <TextField
+                  required
+                  fullWidth
+                  label="Username"
+                  margin="normal"
+                  variant="outlined"
+                  value={username.value}
+                  onChange={username.changeHandler}
+                />
+
+                {username.error && (
+                  <Typography color="error" variant="caption">
+                    {username.error}
+                  </Typography>
+                )}
+
+                <TextField
+                  required
+                  fullWidth
+                  label="Password"
+                  type="password"
+                  margin="normal"
+                  variant="outlined"
+                  value={password.value}
+                  onChange={password.changeHandler}
+                />
+
+                <Button
+                  sx={{
+                    marginTop: "1rem",
+                  }}
+                  variant="contained"
+                  color="primary"
+                  type="submit"
+                  fullWidth
+                  disabled={isLoading}
+                >
+                  Sign Up
+                </Button>
+
+                <Typography textAlign={"center"} m={"1rem"}>
+                  OR
+                </Typography>
+
+                <Button
+                  disabled={isLoading}
+                  fullWidth
+                  variant="text"
+                  onClick={toggleLogin}
+                >
+                  Login Instead
+                </Button>
+              </form>
+            </>
+          )}
+        </Paper>
+      </Container>
+    </div>
+  );
+};
+
+export default Login;
