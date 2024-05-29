@@ -63,12 +63,10 @@ app.use("/api/v1/chat", chatRoute);
 app.use("/api/v1/admin", adminRoute);
 
 app.get("/", (req, res) => {
+  res.set('Access-Control-Allow-Origin', '*');
   res.send("Hello World");
 });
 
-app.get('/cors', (req, res) => {
-  res.set('Access-Control-Allow-Origin', '*');
-});
 
 io.use((socket, next) => {
   cookieParser()(
