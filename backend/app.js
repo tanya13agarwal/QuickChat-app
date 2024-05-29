@@ -51,7 +51,7 @@ const io = new Server(server, {
   cors: corsOptions,
 });
 // corsOptions
-app.use(cors(corsOption));
+app.use(cors(corsOptions));
 
 app.set("io", io);
 
