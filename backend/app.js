@@ -66,6 +66,10 @@ app.get("/", (req, res) => {
   res.send("Hello World");
 });
 
+app.get('/cors', (req, res) => {
+  res.set('Access-Control-Allow-Origin', '*');
+});
+
 io.use((socket, next) => {
   cookieParser()(
     socket.request,
