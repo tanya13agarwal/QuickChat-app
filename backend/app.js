@@ -51,10 +51,11 @@ const io = new Server(server, {
   cors: corsOptions,
 });
 
+app.use(express.json());
 app.set("io", io);
 
 // Using Middlewares Here
-app.use(express.json());
+
 app.use(cookieParser());
 app.use(cors(corsOptions));
 
