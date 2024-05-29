@@ -51,10 +51,7 @@ const io = new Server(server, {
   cors: corsOptions,
 });
 // corsOptions
-app.use(cors({
-  origin:"https://quick-chat-chatapplication-hdjof9uvh-tanya13agarwals-projects.vercel.app",
-  credentials : true, 
-}));
+app.use(cors(corsOption));
 
 app.set("io", io);
 
