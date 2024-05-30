@@ -40,7 +40,6 @@ const Login = () => {
     e.preventDefault();
 
     const toastId = toast.loading("Logging In...");
-console.log(`${server}/api/v1/user/login/`);
     setIsLoading(true);
     const config = {
       withCredentials: true,
@@ -50,6 +49,7 @@ console.log(`${server}/api/v1/user/login/`);
     };
 
     try {
+      console.log(server);
       const { data } = await axios.post(
         `${server}/api/v1/user/login/`,
         {
