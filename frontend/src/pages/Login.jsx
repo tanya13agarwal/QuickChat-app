@@ -36,10 +36,11 @@ const Login = () => {
   const dispatch = useDispatch();
 
   const handleLogin = async (e) => {
+
     e.preventDefault();
 
     const toastId = toast.loading("Logging In...");
-
+console.log(`${server}/api/v1/user/login/`);
     setIsLoading(true);
     const config = {
       withCredentials: true,
@@ -137,7 +138,7 @@ const Login = () => {
         >
           {isLogin ? (
             <>
-              <Typography variant="h5">${server}</Typography>
+              <Typography variant="h5">Login</Typography>
               <form
                 style={{
                   width: "100%",
