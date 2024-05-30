@@ -1,12 +1,14 @@
 const corsOptions = {
-  origin: [
-    process.env.CLIENT_URL,
-    "http://localhost:5173",
-    "http://localhost:4173",
-  ],
+  origin: "*",
   methods: ["GET", "POST", "PUT", "DELETE"],
   credentials: true,
 };
+
+// [
+//     process.env.CLIENT_URL,
+//     "http://localhost:5173",
+//     "http://localhost:4173",
+//   ],
 
 const QUICKCHAT_TOKEN = "quickchat-token";
 
