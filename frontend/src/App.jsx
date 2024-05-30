@@ -34,8 +34,6 @@ const App = () => {
       .then(({ data }) => dispatch(userExists(data.user)))
       .catch((err) => dispatch(userNotExists()));
   }, [dispatch]);
-
-  console.log(server);
  
 
   return loader ? (
