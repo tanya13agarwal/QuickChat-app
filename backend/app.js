@@ -45,6 +45,7 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
+console.log(corsOptions)
 const app = express();
 const server = createServer(app);
 const io = new Server(server, {
