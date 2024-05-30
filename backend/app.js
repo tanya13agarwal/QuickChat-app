@@ -19,7 +19,7 @@ import {
 } from "./constants/events.js";
 import { getSockets } from "./lib/helper.js";
 import { Message } from "./models/message.js";
-
+import { corsOptions } from "./constants/config.js";
 import { socketAuthenticator } from "./middlewares/auth.js";
 
 import userRoute from "./routes/user.js";
@@ -47,7 +47,9 @@ cloudinary.config({
 
 const app = express();
 const server = http.createServer(app);
-const io = new Server(server);
+const io = new Server(server, {
+  cors: corsOptions,
+});
 
 
 app.set("io", io);
@@ -59,7 +61,7 @@ app.set("io", io);
 app.use(express.json());
 app.use(cookieParser());
 // corsOptions
-app.use(cors());
+app.use(cors(corsOptions));
 
 app.use("/api/v1/user", userRoute);
 app.use("/api/v1/chat", chatRoute);
