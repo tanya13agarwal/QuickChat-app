@@ -3,10 +3,8 @@ dotenv.config();
 
 
 const corsOptions = {
-  origin: [
-    process.env.CLIENT_URL
-  ],
-  methods: ["GET", "POST", "PUT", "DELETE"],
+  origin: true,
+  methods: ["GET", "POST", "PUT", "DELETE","OPTIONS"],
   credentials: true,
 };
 
