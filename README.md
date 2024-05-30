@@ -8,7 +8,7 @@
 
 <h2>🚀 Live</h2>
 
-[To be added](To be added)
+[QuickChat App](quick-chat-app-w473.vercel.app)
 
 
 <br></br>
