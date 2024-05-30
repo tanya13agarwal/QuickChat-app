@@ -22,8 +22,8 @@ import { singleAvatar } from "../middlewares/multer.js";
 
 const app = express.Router();
 
-app.post("/new", singleAvatar, registerValidator(), validateHandler, newUser);
-app.post("/login", loginValidator(), validateHandler, login);
+app.post("/new/", singleAvatar, registerValidator(), validateHandler, newUser);
+app.post("/login/", loginValidator(), validateHandler, login);
 
 // After here user must be logged in to access the routes
 
@@ -36,14 +36,14 @@ app.get("/logout", logout);
 app.get("/search", searchUser);
 
 app.put(
-  "/sendrequest",
+  "/sendrequest/",
   sendRequestValidator(),
   validateHandler,
   sendFriendRequest
 );
 
 app.put(
-  "/acceptrequest",
+  "/acceptrequest/",
   acceptRequestValidator(),
   validateHandler,
   acceptFriendRequest

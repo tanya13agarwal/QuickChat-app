@@ -30,16 +30,16 @@ const app = express.Router();
 
 app.use(isAuthenticated);
 
-app.post("/new", newGroupValidator(), validateHandler, newGroupChat);
+app.post("/new/", newGroupValidator(), validateHandler, newGroupChat);
 
 app.get("/my", getMyChats);
 
 app.get("/my/groups", getMyGroups);
 
-app.put("/addmembers", addMemberValidator(), validateHandler, addMembers);
+app.put("/addmembers/", addMemberValidator(), validateHandler, addMembers);
 
 app.put(
-  "/removemember",
+  "/removemember/",
   removeMemberValidator(),
   validateHandler,
   removeMember
@@ -49,7 +49,7 @@ app.delete("/leave/:id", chatIdValidator(), validateHandler, leaveGroup);
 
 // Send Attachments
 app.post(
-  "/message",
+  "/message/",
   attachmentsMulter,
   sendAttachmentsValidator(),
   validateHandler,
