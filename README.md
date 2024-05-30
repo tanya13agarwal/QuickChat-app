@@ -8,8 +8,7 @@
 
 <h2>🚀 Live</h2>
 
-[QuickChat App](https://vercel.com/tanya13agarwals-projects/quick-chat-app-w473/2PNxWNdhMoCvyVkRMqHLyNBxLcGZ)
-
+[QuickChat App](https://quick-chat-app-w473-c4xlzlf75-tanya13agarwals-projects.vercel.app/)
 
 <br></br>
   
