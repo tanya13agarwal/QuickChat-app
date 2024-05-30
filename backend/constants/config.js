@@ -1,7 +1,5 @@
 import dotenv from "dotenv";
-dotenv.config({
-  path: "./.env",
-});
+dotenv.config();
 
 
 const corsOptions = {
@@ -14,7 +12,7 @@ const corsOptions = {
   credentials: true,
 };
 
-// console.log(" hyy: ",process.env.CLIENT_URL);
+console.log(" hyy: ",process.env.CLIENT_URL);
 
 const QUICKCHAT_TOKEN = "quickchat-token";
 
