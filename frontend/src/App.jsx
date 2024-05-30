@@ -30,11 +30,13 @@ const App = () => {
 
   useEffect(() => {
     axios
-      .get(`quickchat-app-iouv.onrender.com/api/v1/user/me`, { withCredentials: true })
+      .get(` ${server}/api/v1/user/me`, { withCredentials: true })
       .then(({ data }) => dispatch(userExists(data.user)))
       .catch((err) => dispatch(userNotExists()));
   }, [dispatch]);
-  // ${server}
+
+  console.log(server);
+ 
 
   return loader ? (
     <LayoutLoader />
