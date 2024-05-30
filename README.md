@@ -68,8 +68,8 @@ Technologies used in the project:
 *   Express JS
 *   Node JS
 *   MongoDB
-*   Cloudinary
-*   Netlify
+*   Cloudinary for data storage
+*   Render and Vercel for deploying the website
 
 <br></br>
 <h2>🛡️ License:</h2>
