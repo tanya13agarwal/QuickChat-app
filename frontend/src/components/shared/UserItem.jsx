@@ -7,10 +7,13 @@ const UserItem = ({
   user,
   handler,
   handlerIsLoading,
+  isLoading,
+  current ,
   isAdded = false,
   styling = {},
 }) => {
   const { name, _id, avatar } = user;
+  console.log("current: ",current)
 
   return (
     <ListItem>
@@ -37,21 +40,23 @@ const UserItem = ({
         >
           {name}
         </Typography>
-
-        <IconButton
-          size="small"
-          sx={{
-            bgcolor: isAdded ? "error.main" : "primary.main",
-            color: "white",
-            "&:hover": {
-              bgcolor: isAdded ? "error.dark" : "primary.dark",
-            },
-          }}
-          onClick={() => handler(_id)}
-          disabled={handlerIsLoading}
+        
+        <div 
+          className={`${isAdded ? "bg-red" : isLoading && current ? "bg-[#1c1c1c]" : "bg-[#1a73d2]"} rounded-full text-white
+          hover : ${isAdded ? "" : ""}`}
         >
-          {isAdded ? <RemoveIcon /> : <AddIcon />}
-        </IconButton>
+          <IconButton
+            size="small"
+            sx={{
+              color: "white",
+            }}
+            
+            onClick={() => handler(_id)}
+            disabled={handlerIsLoading}
+          >
+            {isAdded ? <RemoveIcon /> : <AddIcon />}
+          </IconButton>
+        </div>
       </Stack>
     </ListItem>
   );
