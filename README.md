@@ -68,6 +68,7 @@ Technologies used in the project:
 *   Node JS
 *   MongoDB
 *   Cloudinary for data storage
+*   socket.io for real time communication
 *   Render and Vercel for deploying the website
 
 <br></br>
