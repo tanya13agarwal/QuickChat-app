@@ -1,6 +1,6 @@
 <h1 align="center" id="title">QuickChat App</h1>
 
-<p id="description">This is a Chat Application built using the MERN stack (MongoDB Express.js React Node.js). It offers a comprehensive online platform for seamless communication and collaboration. Users can easily connect by sending and accepting friend requests and can engage in real-time text communication share multimedia files and participate in group chats. Admins have special capabilities to manage users create groups broadcast messages and monitor activities ensuring a well-organized and secure environment.</p>
+<p id="description">This is a Chat Application built using the MERN stack (MongoDB Express.js React Node.js). It offers a comprehensive online platform for seamless communication and collaboration. Users can easily connect by sending and accepting friend requests and can engage in real-time text communication, share multimedia files, talk and react with emojis, edit sent messages within 15 minutes, and participate in group chats. Admins have special capabilities to manage users (delete users from database), create groups, broadcast messages and monitor activities ensuring a well-organized and secure environment.</p>
 
 <p align="center"><img src="https://img.shields.io/badge/License-MIT-green" alt="shields"></p>
 
@@ -20,9 +20,14 @@ Here're some of the project's best features:
 *   Send/Receive Friend Requests: Users can send friend requests to connect with others on the platform. They can also accept or decline friend requests.
 *   Message Notifications: Real-time notifications for new messages.
 *   Group Chat :- Admins can create groups and broadcast messages to all group members. They can also add or remove members from groups.
-*   Admin Dashboard :- Admin can View and manage all users registered on the platform Monitor chats and messages for moderation purposes and oversee all chat activities if necessary.
+*   Admin Dashboard :- Admin can View, Delete and manage all users registered on the platform Monitor chats and messages for moderation purposes and oversee all chat activities if necessary.
 *   Private Chat :- Team members can chat privately with the admin and other team members and Direct messaging accessible.
 *   User Control :- Users can delete their chat history. They can also unfriend other users removing them from their friend list.
+*   Admin Broadcast Messaging :- Admins can send broadcast messages to all users on the platform.
+*   Message Editing: Users can edit their sent messages within 15 minutes of sending.
+*   Emojis and Reactions
+Send Emojis: Users can include emojis in their messages.
+Message Reactions: Users can react to received messages using emojis.
 
 
 <br></br>
