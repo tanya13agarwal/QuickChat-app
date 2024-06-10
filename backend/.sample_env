@@ -1,0 +1,16 @@
+
+
+MONGO_URI = enter_your_mongodb_url
+JWT_SECRET = crencfu23evdy3
+
+ADMIN_SECRET_KEY= enter_secret_key
+
+NODE_ENV = PRODUCTION
+
+# CLIENT_URL = http://localhost:5173
+
+CLOUDINARY_CLOUD_NAME = 
+CLOUDINARY_API_KEY = 
+CLOUDINARY_API_SECRET =  
+
+PORT = 4000
