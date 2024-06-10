@@ -1,43 +1,34 @@
-import React, {
-  Fragment,
-  useCallback,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
-import AppLayout from "../components/layout/AppLayout";
-import { IconButton, Skeleton, Stack } from "@mui/material";
-import { grayColor, orange } from "../constants/color";
-import {
-  AttachFile as AttachFileIcon,
-  Send as SendIcon,
-} from "@mui/icons-material";
-import { InputBox } from "../components/styles/StyledComponents";
-import FileMenu from "../components/dialogs/FileMenu";
-import MessageComponent from "../components/shared/MessageComponent";
-import { getSocket } from "../socket";
-import {
-  ALERT,
-  CHAT_JOINED,
-  CHAT_LEAVED,
-  NEW_MESSAGE,
-  START_TYPING,
-  STOP_TYPING,
-} from "../constants/events";
-import { useChatDetailsQuery, useGetMessagesQuery } from "../redux/api/api";
-import { useErrors, useSocketEvents } from "../hooks/hook";
+
 import { useInfiniteScrollTop } from "6pp";
+import data from '@emoji-mart/data';
+import Picker from '@emoji-mart/react';
+import { AttachFile as AttachFileIcon, Send as SendIcon } from "@mui/icons-material";
+import EmojiEmotionsIcon from '@mui/icons-material/EmojiEmotions';
+import { IconButton, Skeleton, Stack } from "@mui/material";
+import React, { Fragment, useCallback, useEffect, useRef, useState } from "react";
 import { useDispatch } from "react-redux";
-import { setIsFileMenu } from "../redux/reducers/misc";
-import { removeNewMessagesAlert } from "../redux/reducers/chat";
-import { TypingLoader } from "../components/layout/Loaders";
 import { useNavigate } from "react-router-dom";
+import FileMenu from "../components/dialogs/FileMenu";
+import AppLayout from "../components/layout/AppLayout";
+import { TypingLoader } from "../components/layout/Loaders";
+import MessageComponent from "../components/shared/MessageComponent";
+import { InputBox } from "../components/styles/StyledComponents";
+import {
+  ALERT, CHAT_JOINED, CHAT_LEAVED,
+  MESSAGE_REACTION,
+  NEW_MESSAGE, START_TYPING, STOP_TYPING,
+} from "../constants/events";
+import { useErrors, useSocketEvents } from "../hooks/hook";
+import { useChatDetailsQuery, useGetMessagesQuery } from "../redux/api/api";
+import { removeNewMessagesAlert } from "../redux/reducers/chat";
+import { setIsFileMenu } from "../redux/reducers/misc";
+import { getSocket } from "../socket";
+import { orange } from "../constants/color";
 
 const Chat = ({ chatId, user }) => {
   const socket = getSocket();
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
   const containerRef = useRef(null);
   const bottomRef = useRef(null);
 
@@ -45,13 +36,13 @@ const Chat = ({ chatId, user }) => {
   const [messages, setMessages] = useState([]);
   const [page, setPage] = useState(1);
   const [fileMenuAnchor, setFileMenuAnchor] = useState(null);
-
+  const [isPickerVisible, setPickerVisible] = useState(false);
+  const [selectedMessageId, setSelectedMessageId] = useState(null);
   const [IamTyping, setIamTyping] = useState(false);
   const [userTyping, setUserTyping] = useState(false);
   const typingTimeout = useRef(null);
 
   const chatDetails = useChatDetailsQuery({ chatId, skip: !chatId });
-
   const oldMessagesChunk = useGetMessagesQuery({ chatId, page });
 
   const { data: oldMessages, setData: setOldMessages } = useInfiniteScrollTop(
@@ -67,10 +58,12 @@ const Chat = ({ chatId, user }) => {
     { isError: oldMessagesChunk.isError, error: oldMessagesChunk.error },
   ];
 
+
   const members = chatDetails?.data?.chat?.members;
 
   const messageOnChange = (e) => {
-    setMessage(e.target.value);
+    const value = e.native ? message + e.native : e.target.value;
+    setMessage(value);
 
     if (!IamTyping) {
       socket.emit(START_TYPING, { members, chatId });
@@ -92,10 +85,8 @@ const Chat = ({ chatId, user }) => {
 
   const submitHandler = (e) => {
     e.preventDefault();
-
     if (!message.trim()) return;
 
-    // Emitting the message to the server
     socket.emit(NEW_MESSAGE, { chatId, members, message });
     setMessage("");
   };
@@ -114,8 +105,7 @@ const Chat = ({ chatId, user }) => {
   }, [chatId]);
 
   useEffect(() => {
-    if (bottomRef.current)
-      bottomRef.current.scrollIntoView({ behavior: "smooth" });
+    if (bottomRef.current) bottomRef.current.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
   useEffect(() => {
@@ -125,7 +115,6 @@ const Chat = ({ chatId, user }) => {
   const newMessagesListener = useCallback(
     (data) => {
       if (data.chatId !== chatId) return;
-
       setMessages((prev) => [...prev, data.message]);
     },
     [chatId]
@@ -134,7 +123,6 @@ const Chat = ({ chatId, user }) => {
   const startTypingListener = useCallback(
     (data) => {
       if (data.chatId !== chatId) return;
-
       setUserTyping(true);
     },
     [chatId]
@@ -160,8 +148,33 @@ const Chat = ({ chatId, user }) => {
         chat: chatId,
         createdAt: new Date().toISOString(),
       };
-
       setMessages((prev) => [...prev, messageForAlert]);
+    },
+    [chatId]
+  );
+
+  const reactionListener = useCallback(
+    (data) => {
+      if (data.chatId !== chatId) return;
+      setMessages((prevMessages) =>
+        prevMessages.map((msg) =>
+          msg._id === data.messageId
+            ? { ...msg, reactions: [...msg.reactions, data.reaction] }
+            : msg
+        )
+      );
+    },
+    [chatId]
+  );
+
+  const messageEditedListener = useCallback(
+    (data) => {
+      if (data.chatId !== chatId) return;
+      setMessages((prevMessages) =>
+        prevMessages.map((msg) =>
+          msg._id === data.messageId ? { ...msg, content: data.content, edited: true } : msg
+        )
+      );
     },
     [chatId]
   );
@@ -171,36 +184,52 @@ const Chat = ({ chatId, user }) => {
     [NEW_MESSAGE]: newMessagesListener,
     [START_TYPING]: startTypingListener,
     [STOP_TYPING]: stopTypingListener,
+    [MESSAGE_REACTION]: reactionListener,
+    "MESSAGE_EDITED": messageEditedListener,
   };
 
   useSocketEvents(socket, eventHandler);
-
   useErrors(errors);
 
   const allMessages = [...oldMessages, ...messages];
+
+  const handleEmojiReaction = (emoji, messageId) => {
+    socket.emit(MESSAGE_REACTION, { chatId, messageId, reaction: emoji.native });
+    setPickerVisible(false);
+    setSelectedMessageId(null);
+  };
+
+  const toggleEmojiPicker = (messageId) => {
+    setSelectedMessageId(messageId);
+    setPickerVisible(!isPickerVisible);
+  };
 
   return chatDetails.isLoading ? (
     <Skeleton />
   ) : (
     <Fragment>
       <Stack
+       className="chatPic"
         ref={containerRef}
         boxSizing={"border-box"}
         padding={"1rem"}
         spacing={"1rem"}
-        bgcolor={grayColor}
+        // bgcolor={grayColor}
         height={"90%"}
         sx={{
           overflowX: "hidden",
           overflowY: "auto",
         }}
       >
-        {allMessages.map((i) => (
-          <MessageComponent key={i._id} message={i} user={user} />
+        {allMessages.map((msg) => (
+          <MessageComponent
+            key={msg._id}
+            message={msg}
+            user={user}
+            toggleEmojiPicker={toggleEmojiPicker}
+          />
         ))}
-
         {userTyping && <TypingLoader />}
-
         <div ref={bottomRef} />
       </Stack>
 
@@ -220,7 +249,7 @@ const Chat = ({ chatId, user }) => {
           <IconButton
             sx={{
               position: "absolute",
-              left: "1.5rem",
+              left: "1rem",
               rotate: "30deg",
             }}
             onClick={handleFileOpen}
@@ -228,7 +257,36 @@ const Chat = ({ chatId, user }) => {
             <AttachFileIcon />
           </IconButton>
 
+          <IconButton
+            sx={{
+              position: "absolute",
+              left: "2.5rem",
+            }}
+            onClick={() => setPickerVisible((prev)=>!prev)}
+          >
+            <EmojiEmotionsIcon />
+          </IconButton>
+
+          <div className="absolute bottom-full translate-y-2">
+            <div className={`${isPickerVisible ? "block" : "hidden"}`}>
+              <Picker
+                data={data}
+                previewPosition="none"
+                onEmojiSelect={(emoji) =>
+                  selectedMessageId
+                    ? handleEmojiReaction(emoji, selectedMessageId)
+                    : messageOnChange(emoji)
+                }
+                // onClickOutside={() => setPickerVisible(!isPickerVisible)}
+                theme="light"
+              />
+            </div>
+          </div>
+
           <InputBox
+            sx={{
+              paddingLeft: "4rem",
+            }}
             placeholder="Type Message Here..."
             value={message}
             onChange={messageOnChange}
@@ -241,9 +299,8 @@ const Chat = ({ chatId, user }) => {
               bgcolor: orange,
               color: "white",
               marginLeft: "1rem",
-              padding: "0.5rem",
               "&:hover": {
-                bgcolor: "error.dark",
+                bgcolor: orange,
               },
             }}
           >
@@ -252,9 +309,12 @@ const Chat = ({ chatId, user }) => {
         </Stack>
       </form>
 
-      <FileMenu anchorE1={fileMenuAnchor} chatId={chatId} />
+      <FileMenu fileMenuAnchor={fileMenuAnchor} setFileMenuAnchor={setFileMenuAnchor} chatId={chatId}/>
     </Fragment>
   );
 };
 
 export default AppLayout()(Chat);
+
+
+

@@ -39,6 +39,34 @@ const newUser = TryCatch(async (req, res, next) => {
   sendToken(res, user, 201, "User created");
 });
 
+//updating the user profile
+const updateUser = TryCatch(async (req, res, next) => {
+  const { name, username, bio } = req.body;
+
+  const {userId} = req.user.id;
+
+  const file = req.file;
+
+  if (!file) return next(new ErrorHandler("Please Upload Avatar"));
+
+  const result = await uploadFilesToCloudinary([file]);
+
+  const avatar = {
+    public_id: result[0].public_id,
+    url: result[0].url,
+  };
+
+  const user = await User.findByIdAndUpdate(userId , {
+    name : name,
+    bio : bio,
+    username : username,
+    avatar : avatar,
+  });
+
+  sendToken(res, user, 201, "User updated");
+});
+
+
 // Login user and save token in cookie
 const login = TryCatch(async (req, res, next) => {
   const { username, password } = req.body;
@@ -172,20 +200,22 @@ const acceptFriendRequest = TryCatch(async (req, res, next) => {
 });
 
 const getMyNotifications = TryCatch(async (req, res) => {
+  console.log('user',req.user)
   const requests = await Request.find({ receiver: req.user }).populate(
     "sender",
     "name avatar"
   );
-
+  console.log("nkknk",requests)
+  console.log(requests[0]?.sender?.avatar?.url)
   const allRequests = requests.map(({ _id, sender }) => ({
     _id,
     sender: {
       _id: sender._id,
       name: sender.name,
-      avatar: sender.avatar.url,
+      avatar: sender?.avatar?.url,
     },
   }));
-
+  console.log("allreq..................",allRequests)
   return res.status(200).json({
     success: true,
     allRequests,
@@ -237,6 +267,7 @@ export {
   login,
   logout,
   newUser,
+  updateUser,
   searchUser,
   sendFriendRequest,
 };

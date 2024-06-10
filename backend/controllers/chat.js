@@ -11,6 +11,7 @@ import {
   NEW_MESSAGE,
   NEW_MESSAGE_ALERT,
   REFETCH_CHATS,
+  // MESSAGE_UPDATED ,
 } from "../constants/events.js";
 import { getOtherMember } from "../lib/helper.js";
 import { User } from "../models/user.js";
@@ -51,8 +52,8 @@ const getMyChats = TryCatch(async (req, res, next) => {
       groupChat,
       avatar: groupChat
         ? members.slice(0, 3).map(({ avatar }) => avatar.url)
-        : [otherMember.avatar.url],
-      name: groupChat ? name : otherMember.name,
+        : [otherMember?.avatar?.url],
+      name: groupChat ? name : otherMember?.name,
       members: members.reduce((prev, curr) => {
         if (curr._id.toString() !== req.user.toString()) {
           prev.push(curr._id);
@@ -172,6 +173,7 @@ const removeMember = TryCatch(async (req, res, next) => {
     message: "Member removed successfully",
   });
 });
+
 
 const leaveGroup = TryCatch(async (req, res, next) => {
   const chatId = req.params.id;
@@ -325,6 +327,39 @@ const renameGroup = TryCatch(async (req, res, next) => {
   });
 });
 
+const editMessage = TryCatch(async (req, res, next) => {
+  const { messageId, content } = req.body;
+
+  // console.log("in chat controller: ",messageId);
+  // console.log("in chat controller: ",content);
+  
+  const message = await Message.findById(messageId);
+
+  if (!message) {
+    return next(new ErrorHandler("Message not found", 404));
+  }
+
+  if (message.sender.toString() !== req.user.toString()) {
+    return next(new ErrorHandler("You are not allowed to edit this message", 403));
+  }
+  // console.log('gfgf' , message)
+  message.content = content;
+  await message.save();
+
+  const chat = await Chat.findById(message.chat);
+
+  emitEvent(req, MESSAGE_EDITED, chat.members, {
+    messageId: message._id,
+    content: message.content,
+  });
+
+  return res.status(200).json({
+    success: true,
+    message: "Message edited successfully",
+    editedMessage: message,
+  });
+});
+
 const deleteChat = TryCatch(async (req, res, next) => {
   const chatId = req.params.id;
 
@@ -417,6 +452,7 @@ export {
   sendAttachments,
   getChatDetails,
   renameGroup,
+  editMessage,
   deleteChat,
   getMessages,
 };

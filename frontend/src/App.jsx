@@ -9,6 +9,9 @@ import { userExists, userNotExists } from "./redux/reducers/auth";
 import { Toaster } from "react-hot-toast";
 import { SocketProvider } from "./socket";
 
+
+
+// Dynamic Routing
 const Home = lazy(() => import("./pages/Home"));
 const Login = lazy(() => import("./pages/Login"));
 const Chat = lazy(() => import("./pages/Chat"));
@@ -36,6 +39,7 @@ const App = () => {
   }, [dispatch]);
  
 
+  // if loader is true then show loading else show the page
   return loader ? (
     <LayoutLoader />
   ) : (

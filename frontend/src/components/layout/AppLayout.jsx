@@ -27,6 +27,7 @@ import ChatList from "../specific/ChatList";
 import Profile from "../specific/Profile";
 import Header from "./Header";
 
+
 const AppLayout = () => (WrappedComponent) => {
   return (props) => {
     const params = useParams();
@@ -45,6 +46,22 @@ const AppLayout = () => (WrappedComponent) => {
 
     const { isLoading, data, isError, error, refetch } = useMyChatsQuery("");
 
+    useEffect(() => {
+      const handleUserUpdate = () => {
+        // Refresh the page when a "userUpdate" event is received
+        window.location.reload();
+      };
+    
+      // Example socket event listener
+      socket.on("userUpdate", handleUserUpdate);
+      
+    
+      return () => {
+        // Clean up event listener when component unmounts
+        socket.off("userUpdate", handleUserUpdate);
+      };
+    }, []);
+    
     useErrors([{ isError, error }]);
 
     useEffect(() => {
